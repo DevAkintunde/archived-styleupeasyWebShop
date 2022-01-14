@@ -1,0 +1,29 @@
+ul.js-pager__items.pager li {
+	list-style: none;
+    display: block;
+    text-align: center;
+}
+ul.js-pager__items.pager li a {
+	background: #67373e;
+    color: #fff;
+    min-width: 300px;
+    max-width: 100%;
+    font-weight: bold;
+}
+ul.js-pager__items.pager li a::after {
+	transform: translate(0px, 5px) !important;
+	left: 0px !important;
+}
+
+ul.pager__items.uk-pagination li,
+ul.pager__items.uk-pagination li a {
+	color: #612e35;
+    font-weight: bold;
+}
+ul.pager__items.uk-pagination li a {
+	font-weight: 900;
+}
+.uk-card-primary ul.pager__items.uk-pagination li, 
+.uk-card-primary ul.pager__items.uk-pagination li a{
+	color: #fff;
+}

@@ -1,0 +1,119 @@
+#pageTitle h1 {
+	color: #fff;
+}
+
+fieldset.product-colour-attribute .form-type-radio {
+	float: left;
+	overflow: hidden;
+	display: flex;
+	clear: none;
+}
+
+fieldset.product-colour-attribute .form-type-radio input {
+	_display: none;
+}
+
+fieldset.product-colour-attribute {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+.attribute-color-swatch {
+	background-color: rgb(0, 0, 0);
+	width: 20px;
+	height: 20px;
+	border: 6px solid #ffffff75;
+	border-radius: 30px;
+	cursor: pointer;
+	margin-right: 5px !important;
+}
+
+#active-attribute-colour {
+	width: 24px;
+	height: 24px;
+}
+
+/**** forms ****/
+
+form .form-item input:not([type='radio']), form .form-item select {
+	border: 3px solid #dda384;
+	border-radius: 6px;
+	height: 30px;
+	font-size: initial;
+	padding: 0 5px;
+	text-align: center;
+}
+
+form .form-item input[type='radio'] {
+	height: 50px;
+	width: 50px;
+	margin: -10px -30px 0px 10px;
+	background-color: #ba6b57;
+	background-size: contain;
+}
+
+.remove-input-number-spin-button {
+	border: none;
+	border-radius: 10px;
+	padding: 4px;
+	margin: 3px;
+	text-align: center;
+	background: #612e35;
+	color: #fff;
+	font-size: larger;
+}
+
+.remove-input-number-spin-button, .remove-input-number-spin-button::-webkit-outer-spin-button, .remove-input-number-spin-button::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	-moz-appearance: textfield;
+	margin: 0;
+}
+
+/**** checkout ***/
+
+form .form-item input[type='radio'].uk-radio:checked {
+	background-color: #612e35;
+	border: 10px solid #ba6b57;
+}
+
+/*** Submit Loading Button**/
+
+.submit-loading {
+	overflow: hidden;
+	margin: auto;
+	border: 5px solid #612e35 !important;
+	border-top: none !important;
+	border-bottom: none !important;
+	padding: 0 !important;
+	font-size: .1em !important;
+	text-indent: -9999em;
+	width: 15em;
+	height: 3em;
+	border-radius: 30%;
+	background: radial-gradient(#f00bb417, white);
+	position: absolute;
+	-webkit-animation: load3 1.4s infinite linear;
+	animation: load3 1.4s infinite linear;
+	transform: translateZ(0);
+}
+
+@-webkit-keyframes load3 {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes load3 {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}

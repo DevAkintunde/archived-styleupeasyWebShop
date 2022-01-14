@@ -1,0 +1,25 @@
+{
+  "short_name": "Shop|StyleUpEasy",
+  "name": "StyleUpEasy Online E-commerce Store",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "32x31",
+      "type": "image/png"
+    },
+    {
+      "src": "logo-240.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo-640.png",
+      "type": "image/png",
+      "sizes": "640x640"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

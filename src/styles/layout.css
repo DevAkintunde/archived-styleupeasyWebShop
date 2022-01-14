@@ -1,0 +1,700 @@
+:focus {
+	outline: none;
+}
+
+:focus:not([tabindex^='-']) {
+	outline: none;
+}
+
+label.error {
+	color: #ff0707;
+}
+
+/*****menu ***/
+
+.uk-navbar-toggle-icon, .uk-navbar-nav>li>a {
+	min-height: 30px !important;
+}
+
+/**links****/
+
+a {
+	color: #612E35;
+}
+
+a:hover {
+	color: #c32155;
+}
+
+.product-category.field-label>a {
+	font-style: oblique;
+}
+
+.uk-icon-link svg {
+	color: #612E35;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #612E35;
+}
+
+img {
+	min-width: 60px !important;
+}
+
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+	opacity: 1;
+}
+
+#page--header h1, h2, h3, h4, h5, h6 {
+	color: #000;
+}
+
+.field-margin-remover .uk-margin {
+	margin-bottom: 0 !important;
+}
+
+ul.uk-navbar-nav li a>svg {
+	margin-right: 5px;
+}
+
+ul.links.uk-subnav-pill li {
+	margin: auto 0;
+}
+
+.uk-input:focus, .uk-select:focus, .uk-textarea:focus {
+	_border-color: #310b0b;
+}
+
+.uk-accordion-title::before {
+	margin-left: -28px;
+}
+
+/**** More link***/
+
+.more-link {
+	text-align: center;
+}
+
+.more-link a div {
+	display: inline;
+	margin: 0 !important;
+}
+
+.more-link a {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	padding: 0 30px;
+	vertical-align: middle;
+	font-size: .875rem;
+	line-height: 30px;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: .1s ease-in-out;
+	transition-property: color, background-color, border-color;
+	background-color: #222;
+	color: #fff !important;
+	border: 1px solid transparent;
+}
+
+.more-link a::after {
+	top: -5px;
+	left: 1px;
+	width: calc(100% - 5px);
+	height: calc(100%);
+	border: 2px solid #612E35;
+	display: block;
+	content: "";
+	padding: 0;
+	z-index: -1;
+	opacity: 1;
+	position: absolute;
+	transform: translate(7px, 7px);
+	pointer-events: none;
+	transition-property: opacity, transform;
+	transition-duration: 0.4s;
+	transition-timing-function: ease-in-out;
+}
+
+.more-link a:hover::after {
+	opacity: 0;
+	transform: translate(-1px, -1px);
+}
+
+.barcode {
+	min-width: 50px;
+}
+
+/**** tables ****/
+
+table {
+	width: 100%;
+}
+
+table th {
+	text-align: inherit;
+}
+
+table.uk-table .dropbutton-wrapper, table.uk-table td .form-actions {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+table.uk-table .dropbutton-multiple {
+	padding: 0 !important;
+}
+
+table.uk-table td form .field--widget-language-select {
+	margin: 0 !important;
+}
+
+table.uk-table td.views-field-field-purchased-variatn-id-1 {
+	min-width: 150px;
+}
+
+/***navbar***/
+
+#page--navbar {
+	background: rgb(21 58 91 / 22%);
+	box-shadow: 0 1px 15px rgb(47 132 136 / 17%);
+}
+
+#page--navbar a {
+	background: #612E35;
+	color: white;
+	font-weight: 500;
+	margin-right: 2px;
+}
+
+#page--navbar a:hover, #page--navbar li.uk-active a {
+	background: rgb(255 255 255);
+	color: #612E35;
+}
+
+#page--navbar li.uk-active a {
+	_background: #00575a;
+	_background: rgb(4 47 86);
+}
+
+#page--navbar li.uk-active a:hover {
+	background: #ffffffde;
+	color: #612E35;
+}
+
+#page--navbar a.togglemode {
+	background: none;
+	margin-right: 0;
+}
+
+#page--navbar a.togglemode svg {
+	color: #000;
+}
+
+#page--navbar .uk-navbar-dropdown li a {
+	margin: 2px 0;
+	text-align: left;
+	padding-left: 10px;
+}
+
+#page--navbar .uk-navbar-dropdown li a:hover {
+	color: #612e35;
+}
+
+#page--navbar ul li .uk-navbar-dropdown.uk-padding-small {
+	_padding-top: 0;
+	border-top: 40px solid rgb(221 163 132);
+	border-left: 8px solid rgb(228 125 70);
+}
+
+/****page header***/
+
+#page--header nav.uk-sticky-fixed {
+	background-color: #612E35;
+	padding: 9px 0;
+	right: 0;
+}
+
+#page--header nav.uk-sticky-fixed a, #page--header nav.uk-sticky-fixed a span, #page--header nav.uk-sticky-fixed .uk-icon-link svg {
+	color: #fff;
+}
+
+#page--header div.uk-sticky-placeholder {
+	margin: 0 !important;
+}
+
+/*** page wrapper ****/
+
+#page-wrapper main {
+	min-height: 350px;
+}
+
+#page-wrapper {
+	max-width: 1600px;
+	border-top: 5px solid #042f56;
+	padding: 1em 0 0;
+	_background-color: #eff1f5;
+	margin: auto;
+}
+
+#page-wrapper .pre-content {
+	background-color: #fff;
+	_padding-bottom: 20px;
+}
+
+#page--content::before {
+	width: 2px;
+	background-color: #153a5b;
+}
+
+hr.primary-coloured-divider {
+	height: 1px;
+	background-color: #153a5b;
+}
+
+/**** user pages ***/
+
+.insert-border-bottom-after-div>div {
+	border-bottom: 2px ridge #153a5b26;
+}
+
+/***** artcles/blog ***/
+
+.article-body {
+	font-size: 18px;
+	padding-bottom: 1px;
+}
+
+/***** regions****/
+
+#region--header .uk-position-z-index {
+	z-index: 9;
+}
+
+#region--header .flexslider {
+	border: none;
+	margin-bottom: 0;
+}
+
+#region--header .flexslider ol.flex-control-paging {
+	bottom: 40%;
+	z-index: 9;
+}
+
+#region--header .uk-form-row {
+	margin-top: 20px !important;
+}
+
+#region--title h1 {
+	color: #fff;
+}
+
+#region--title .order-no-visibility-on-region-title {
+	margin: auto;
+	text-align: center;
+	display: inline-flex;
+}
+
+#region--sidebar a {
+	color: #ffffffed;
+	background: #612E35;
+	box-shadow: -2px 0px 3px 1px rgb(0 0 0 / 37%);
+	font-weight: bolder;
+	display: block;
+	padding: 1em;
+	text-align: right;
+}
+
+#region--sidebar a:hover, #region--sidebar li.uk-active>a {
+	color: #612e35;
+	background: #ededed;
+	box-shadow: -6px 0px 2px rgb(0 0 0 / 37%);
+}
+
+#region--sidebar .uk-width-xlarge {
+	max-width: 100%;
+}
+
+#region--sidebar .uk-nav-parent-icon>.uk-parent>a::after {
+	position: absolute;
+	right: -3px;
+}
+
+#page--header .uk-margin-large-left {
+	margin-left: 30px !important;
+}
+
+#page--header .uk-margin-medium-right {
+	margin-right: 30px !important;
+}
+
+#styleup-views-block__homepage-hp-header ul.slides {
+	overflow: hidden;
+}
+
+@media all and (max-width: 400px) {
+	#styleup-views-block__homepage-hp-header div.uk-position-medium {
+		width: auto !important;
+	}
+	#styleup-views-block__homepage-hp-header h2.bold-font {
+		display: none;
+	}
+}
+
+@media all and (max-width: 640px) {}
+
+/****messages***/
+
+#shopmellywood-messages {
+	max-height: 250px;
+	overflow-y: auto;
+}
+
+#shopmellywood-messages .uk-alert {
+	margin: 5px 0;
+	font-size: small;
+	padding: 0.6em;
+	min-width: 400px;
+}
+
+/*** node pages***/
+
+#shopmellywood-content .field-label {
+	font-weight: bold;
+}
+
+#shopmellywood-content .uk-grid>.views-element-container {
+	margin-bottom: 0 !important;
+}
+
+#shopmellywood-content .uk-grid figure {
+	margin-bottom: 0 !important;
+}
+
+#shopmellywood-content p.address {
+	margin-bottom: 0;
+}
+
+/***** pagers ****/
+
+nav.pager ul {
+	text-align: center;
+}
+
+nav.pager ul li {
+	list-style: none;
+	display: inline;
+}
+
+/*** hp ***/
+
+.hp-product-grid {
+	_background: rgb(21, 58, 91);
+	background: rgb(221 163 132);
+	_margin: auto -40px;
+}
+
+.hp-product-grid .views-field-field-product-images:hover .field-content {
+	padding: 10px;
+	transition: 1s;
+	background-color: #0087ff26;
+}
+
+.hp-product-grid .product-large-header-text {
+	color: #612E35;
+}
+
+.promo-label-grid-display {
+	color: #c32155a6 !important;
+	font-size: 6em;
+}
+
+.promo-link-grid-display {
+	font-size: 0.8em;
+}
+
+/****views****/
+
+.views-hide-field-label .field-label {
+	display: none;
+}
+
+/**** views exposed filters ***/
+
+form.views-exposed-form {
+	text-align: center;
+}
+
+form.views-exposed-form fieldset {
+	_border: none;
+	padding: 15px 50px;
+}
+
+form.views-exposed-form label {
+	font-size: large;
+	display: inline-block !important;
+	margin-right: 1em;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+form.views-exposed-form .uk-form-controls {
+	display: inline-block !important;
+}
+
+form.views-exposed-form .uk-form-controls select {
+	font-size: unset;
+	border: 5px solid #153a5b70;
+}
+
+form.views-exposed-form .uk-form-controls select:focus {
+	outline: none;
+}
+
+form.views-exposed-form .form-actions {
+	margin-top: 10px !important;
+}
+
+form.views-exposed-form .fieldset-wrapper .form-radios .form-item {
+	display: inline-block;
+}
+
+/*** Modules ****/
+
+/*** ui kit imager formater module ***/
+
+.uk-thumbnav>.uk-active>::after {
+	_background-color: #ffffff5e;
+}
+
+/******chosen module ***/
+
+.chosen-container a.chosen-single {
+	margin-right: -13px;
+	margin-bottom: 7px;
+	margin-top: 7px;
+}
+
+/*** flags *****/
+
+.flag a {
+	_color: #a1059c;
+	color: #fb0d66 !important;
+}
+
+.action-flag .favouritehover {
+	top: 1px;
+	left: 1px;
+	width: calc(100% - 1px);
+	height: calc(100% - 1px);
+	display: block;
+	content: "";
+	padding: 0;
+	z-index: 0;
+	opacity: 1;
+	position: absolute;
+	transform: translate(7px, 7px);
+	pointer-events: none;
+	transition-property: opacity, transform;
+	transition-duration: 0.4s;
+	transition-timing-function: ease-in-out;
+}
+
+.action-flag a:hover .favouritehover {
+	_opacity: 0;
+	transform: translate(4px, 1px);
+	font-size: smaller;
+	left: 5px;
+	width: calc(100% - 19px);
+	height: calc(100% - 1px);
+}
+
+.action-unflag a:hover .favouritehover {
+	transform: translate(7px, 7px);
+	font-size: initial;
+	opacity: 1;
+}
+
+.action-unflag .favouritehover {
+	transform: translate(4px, 1px);
+	font-size: smaller;
+	top: 1px;
+	left: 1px;
+	width: calc(100% - 1px);
+	height: calc(100% - 1px);
+	display: block;
+	content: "";
+	padding: 0;
+	z-index: 0;
+	opacity: 0;
+	position: absolute;
+	pointer-events: none;
+	transition-property: opacity, transform;
+	transition-duration: 0.4s;
+	transition-timing-function: ease-in-out;
+}
+
+.small-favourite .flag-favourite {
+	font-size: 2em;
+}
+
+.small-favourite .action-flag a:hover .favouritehover {
+	left: 4px;
+	width: calc(100% - 15px);
+}
+
+.small-favourite .action-flag .favouritehover {
+	top: -1px;
+	left: -5px;
+	width: calc(100% - 2px);
+}
+
+/****commerce order****/
+
+.customer-information__shipping .uk-margin {
+	margin: 0;
+}
+
+/*** Registration Form & Sign in form***/
+
+form.user-register-form, form.user-login-form, form.user-pass, form.user-form, form.change-pwd-form, .commerce-checkout-completion-register__form {
+	margin: auto;
+	border: 3px solid #612e35;
+	background: #fff;
+	padding: 2em;
+	border-radius: 5px;
+	max-width: 600px;
+	position: relative;
+}
+
+form.user-login-form, form.user-pass {
+	padding: 0 !important;
+}
+
+form.user-login-form .form-item, form.user-pass .form-item, form.user-pass p {
+	padding: 0 1em;
+}
+
+form.user-login-form .form-type-password {
+	margin-bottom: 0;
+}
+
+form.user-register-form .form-item, .commerce-checkout-completion-register__form .form-item {
+	clear: both;
+}
+
+form.user-register-form .form-item>div, form.user-register-form .form-item>label, .commerce-checkout-completion-register__form .form-item>div, .commerce-checkout-completion-register__form .form-item>label {
+	display: inline-block;
+}
+
+form.user-register-form .form-item>label, .commerce-checkout-completion-register__form .form-item>label {
+	margin-top: 0.5em;
+}
+
+form.user-register-form .form-item div.uk-form-controls, .commerce-checkout-completion-register__form .form-item div.uk-form-controls {
+	float: right;
+}
+
+form.user-register-form .field--type-telephone, form.user-form .field--type-telephone, .commerce-checkout-completion-register__form .field--type-telephone {
+	border-left: 3px solid;
+	padding-left: 10px;
+	background: #dda3840d;
+}
+
+form.user-register-form .field--type-telephone .tabledrag-toggle-weight-wrapper, form.user-register-form .field--type-telephone .tableresponsive-toggle-columns, form.user-register-form tbody td.field-multiple-drag, form.user-form .field--type-telephone .tabledrag-toggle-weight-wrapper, form.user-form .field--type-telephone .tableresponsive-toggle-columns, form.user-form tbody td.field-multiple-drag, .commerce-checkout-completion-register__form .field--type-telephone .tabledrag-toggle-weight-wrapper, .commerce-checkout-completion-register__form .field--type-telephone .tableresponsive-toggle-columns, .commerce-checkout-completion-register__form tbody td.field-multiple-drag {
+	display: none;
+}
+
+form.user-register-form .field--type-telephone table, form.user-form .field--type-telephone table, .commerce-checkout-completion-register__form .field--type-telephone table {
+	display: flex;
+	margin: 0;
+}
+
+form.user-register-form .field--type-telephone .clearfix, form.user-form .field--type-telephone .clearfix, .commerce-checkout-completion-register__form .field--type-telephone .clearfix {
+	width: 100%;
+	text-align: right;
+}
+
+form.user-register-form .field--type-telephone .clearfix input, form.user-form .field--type-telephone .clearfix input, .commerce-checkout-completion-register__form .field--type-telephone .clearfix input {
+	background: #612e35;
+	color: #ffffff;
+	border: 2px solid #dda384;
+	padding: 0 5px;
+	font-weight: 500;
+	text-transform: capitalize;
+}
+
+form.user-register-form table h4, form.user-form table h4, form.user-form label, form.change-pwd-form label, .commerce-checkout-completion-register__form table h4 {
+	font-size: .875rem;
+	font-weight: 500;
+	margin: 0;
+}
+
+form.user-register-form table .field-label, form.user-form table .field-label, .commerce-checkout-completion-register__form table .field-label {
+	padding-left: 0;
+}
+
+form.user-register-form .uk-alert, form.change-pwd-form .uk-alert, .commerce-checkout-completion-register__form .uk-alert {
+	font-size: .875rem;
+	padding: 0;
+	margin: 0;
+}
+
+form.user-register-form tbody, form.user-form tbody, .commerce-checkout-completion-register__form tbody {
+	width: 100%;
+	margin-left: 3em;
+	margin-top: 1em;
+}
+
+form.user-register-form tbody td, form.user-form tbody td, .commerce-checkout-completion-register__form tbody td {
+	_display: block;
+	padding: 0;
+}
+
+form.user-register-form tbody td .form-item, .commerce-checkout-completion-register__form tbody td .form-item {
+	_width: 100%;
+}
+
+form.user-register-form tbody td .form-item .uk-form-controls, .commerce-checkout-completion-register__form tbody td .form-item .uk-form-controls {
+	_width: 100%;
+}
+
+form.user-register-form tbody .uk-table-middle, form.user-form tbody .uk-table-middle, .commerce-checkout-completion-register__form tbody .uk-table-middle {
+	background: #dda38400;
+	border-bottom: 1px solid;
+	_display: block;
+	_height: 100%;
+	border-top: none;
+}
+
+form.user-register-form div.form-actions, form.user-login-form div.form-actions, form.user-pass div.form-actions, form.change-pwd-form div.form-actions, .commerce-checkout-completion-register__form div.form-actions {
+	width: 50%;
+	min-width: 200px;
+	display: inline-block;
+	text-align: center;
+}
+
+form.user-register-form p.back-to-login, form.user-pass p.back-to-login, form.user-login-form .actions-suffix {
+	width: 40%;
+	min-width: 200px;
+	display: inline-block;
+	text-align: center;
+}
+
+form.user-register-form div.form-actions input, form.user-login-form input#edit-submit, form.user-pass input#edit-submit, form.change-pwd-form input#edit-submit, .commerce-checkout-completion-register__form div.form-actions input {
+	background: #BA6B57;
+	color: #fff;
+	font-weight: 450;
+	border-radius: 5px;
+}
+
+#user-login-form .form-item input#edit-name, #user-login-form .form-item input#edit-pass, #user-pass .form-item input#edit-name, #change-pwd-form input#edit-submit {
+	border: 1px solid #dda384;
+	border-radius: 5px;
+}
+
+form.user-login-form p.forgot-password {
+	padding: 0 1em;
+	text-align: right;
+	margin: 0;
+}

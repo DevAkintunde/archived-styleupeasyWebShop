@@ -1,0 +1,18 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+# Paths (clean URLs)
+Disallow: /search/
+Disallow: /signed-in
+Disallow: /signed-in/
+Disallow: /cart
+Disallow: /checkout/
+Disallow: /sign-in
+Disallow: /webshop/
+# Paths (no clean URLs)
+Disallow: /index.php/search/
+Disallow: /index.php/signed-in
+Disallow: /index.php/signed-in/
+Disallow: /index.php/cart
+Disallow: /index.php/checkout/
+Disallow: /index.php/sign-in
+Disallow: /index.php/webshop/

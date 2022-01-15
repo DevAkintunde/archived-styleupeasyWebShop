@@ -32,7 +32,7 @@ const LoggedInNavigation = () => {
           }}
         />
         <div id='loggedInNavigator'
-          data-uk-dropdown='mode:click'>
+          data-uk-dropdown='mode:click; pos:bottom-right'>
           <ul
             className={'uk-nav-divider uk-nav-parent-icon'}
             style={{

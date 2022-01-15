@@ -18,6 +18,7 @@ import ProductsByCategory from '../pages/products/collections/ProductsByCategory
 import PaymentOptions from '../pages/PaymentOptions';
 import SearchProductPage from '../pages/SearchProductPage';
 import ContactPage from '../pages/ContactPage';
+import Page404 from '../pages/Page404';
 
 const PageWrapper = () => {
 
@@ -85,6 +86,9 @@ const PageWrapper = () => {
 						</Route>
 						<Route path='/signed-in'>
 							<Dashboard />
+						</Route>
+						<Route>
+							<Page404 />
 						</Route>
 					</Switch>
 				</div>

@@ -11,7 +11,7 @@ const DashboardOrders = () => {
   const { loggedIn } = useContext(LoggedStatus);
   const { Uid } = useContext(LoggedUID);
 
-  const [userOrders, setUserOrders] = useState();
+  const [userOrders, setUserOrders] = useState([]);
   const [nonOrderMessage, setNonOrderMessage] = useState();
 
   const userOrdersFilter = 'orders?filter[uid.id][value]=' + Uid + '&filter[cart][value]=false&sort[sort-order][path]=completed&sort[sort-order][direction]=DESC&include=order_items.purchased_entity.field_product_images&page[limit]=6'

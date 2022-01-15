@@ -10,7 +10,7 @@ import CheckOutShippingDestination from './CheckOutShippingDestination';
 import CheckOutReview from './CheckOutReview';
 import { Link } from 'react-router-dom';
 import CheckOutShipmentOptions from './CheckOutShipmentOptions';
-import { FaAngleDoubleDown } from 'react-icons/fa';
+import { FaAngleDoubleDown, FaBackspace } from 'react-icons/fa';
 
 //const siteUrl = config.url.SITE_URL;
 const siteJsonUrl = config.url.SITE_JSON_URL;
@@ -182,7 +182,9 @@ const CheckOutProcessor = (props) => {
         formData, singlerenderer]);
 
     //console.log(processPatch);
-    //console.log(formData);
+    // console.log(formData);
+    const [reservedPaymentList, setReservedPaymentList] = useState();
+
     switch (step) {
         case 'paymentOption':
             return (
@@ -207,6 +209,8 @@ const CheckOutProcessor = (props) => {
                                 cartToken={cartToken}
                                 order={order}
                                 orderType={orderType}
+                                reservedPaymentList={reservedPaymentList}
+                                setReservedPaymentList={setReservedPaymentList}
                             />
                             <div className='uk-text-center'>
                                 <Link to='/cart' className={'uk-button uk-button-default'}>
@@ -327,17 +331,16 @@ const CheckOutProcessor = (props) => {
             return (
                 loggedIn !== true ?
                     <div
-                        className='uk-position-relative'>
+                        className='uk-position-relative uk-padding-small'>
                         <LoginForm />
                         <div className='uk-text-center uk-position-bottom-center'
                             style={{ bottom: '20px' }}>
-                            <input
-                                type='button'
-                                value='Go Back'
+                            <button
                                 className='uk-button uk-text-capitalize'
                                 style={{ borderTop: '2px solid #ba6b57' }}
                                 onClick={() => setStep()}
-                            />
+                            ><FaBackspace style={{ fontSize: '1.5em', marginRight: '10px' }} />
+                                Go Back</button>
                         </div>
                     </div>
                     :

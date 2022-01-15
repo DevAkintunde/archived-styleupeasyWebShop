@@ -187,6 +187,7 @@
 	_background-color: #ba6b57;
 	_color: #fff;
 	padding: 0 12px;
+	white-space: nowrap;
 }
 
 .uk-button:disabled {

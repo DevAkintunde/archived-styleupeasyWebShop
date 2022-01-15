@@ -46,9 +46,8 @@ form .form-item input:not([type='radio']), form .form-item select {
 }
 
 form .form-item input[type='radio'] {
-	height: 50px;
-	width: 50px;
-	margin: -10px -30px 0px 10px;
+	height: 45px;
+	width: 45px;
 	background-color: #ba6b57;
 	background-size: contain;
 }

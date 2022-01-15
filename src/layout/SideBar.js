@@ -110,6 +110,7 @@ const SideBar = () => {
 			style={{ maxWidth: '480px' }}
 		>
 			<div className={'uk-card uk-card-default'}>
+				<div className='uk-text-center uk-text-lead'>Categories</div>
 				<ul className='uk-nav-default uk-nav-divider uk-nav-parent-icon uk-padding'
 					style={{
 						fontSize: 'larger', borderTop: '5px solid #612E35',

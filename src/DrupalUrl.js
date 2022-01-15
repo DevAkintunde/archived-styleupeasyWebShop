@@ -3,17 +3,19 @@
 //'entity/router?path=<PATH>&format=<FORMAT>' or 
 //'entity/router?format=<FORMAT>&path=<PATH>'
 
-const siteUri = '/'
-const siteWebUri = 'https://shop.styleupeasy.com/'
-const siteLocalUri = 'https://localhost/styleupeasy/'
+const siteUri = '/';
+const appDeployedUri = 'https://styleupeasy.com/';
+const siteServerUri = 'https://shop.styleupeasy.com/';
+const siteLocalUri = 'https://localhost/styleupeasy/';
 
 
 const prod = {
   url: {
     HOME_INDEX: siteUri,
-    SITE_URL: siteWebUri,
-    SITE_JSON_URL: siteWebUri + 'jsonapi/',
-    SITE_ENTITY_ROUTER_URL: siteWebUri + 'entity/router?format=jsonapi&path=/',
+    APP_URL: appDeployedUri,
+    SITE_URL: siteServerUri,
+    SITE_JSON_URL: siteServerUri + 'jsonapi/',
+    SITE_ENTITY_ROUTER_URL: siteServerUri + 'entity/router?format=jsonapi&path=/',
   },
   payment: {
     paystack: 'pk_live_723787f248647b8a37edb402b947dcd5427a1a1c',
@@ -28,6 +30,7 @@ const prod = {
 const dev = {
   url: {
     HOME_INDEX: siteUri,
+    APP_URL: siteLocalUri,
     SITE_URL: siteLocalUri,
     SITE_JSON_URL: siteLocalUri + 'jsonapi/',
     SITE_ENTITY_ROUTER_URL: siteLocalUri + 'entity/router?format=jsonapi&path=/',

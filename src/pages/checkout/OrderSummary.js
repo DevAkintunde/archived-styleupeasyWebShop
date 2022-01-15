@@ -39,37 +39,37 @@ const OrderSummary = (props) => {
     <>
       {
         order && order.included && tableBody ?
-          <><table
-            className='uk-table uk-table-divider uk-table-small uk-table-middle'
-          ><tbody>
-              {tableBody.map((row, index) => {
-                return (
-                  <tr key={index}>
-                    <td><img src={row.img} alt={row.title} /></td>
-                    <td className='uk-padding-small'>{'Q' + row.qty}</td>
-                    <td>
-                      <span>{row.title.split(' - ')[0]}</span>
-                      <div className='uk-text-secondary uk-text-italic'>{row.title.split(' - ')[1]}</div>
-                    </td>
-                    <td>{row.price}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td></td><td></td>
-                <td>
-                  SubTotal
-                </td>
-                <td
-                  style={{ fontWeight: 'bold' }}
-                >
-                  {order.data.attributes.order_total.subtotal.formatted}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+          <>
+            <div className='uk-overflow-auto'>
+              <table
+                className='uk-table uk-table-divider uk-table-small uk-table-middle uk-table-striped'
+              ><tbody>
+                  {tableBody.map((row, index) => {
+                    return (
+                      <tr key={index}>
+                        <td><img src={row.img} alt={row.title} /></td>
+                        <td className='uk-padding-small'>{'x' + row.qty}</td>
+                        <td>
+                          <span>{row.title.split(' - ')[0]}</span>
+                          <div className='uk-text-secondary uk-text-italic'>{row.title.split(' - ')[1]}</div>
+                        </td>
+                        <td>{row.price}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <div className='uk-grid-small uk-text-center uk-margin' data-uk-grid>
+              <label>
+                SubTotal
+              </label>
+              <span
+                style={{ fontWeight: 'bold' }}
+              >
+                {order.data.attributes.order_total.subtotal.formatted}
+              </span>
+            </div>
           </>
           :
           <Loading />

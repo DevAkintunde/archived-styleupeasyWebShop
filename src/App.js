@@ -179,7 +179,7 @@ const App = () => {
         })
       }
       const outputData = await response.json();
-      //console.log(outputData);
+      // console.log(outputData);
 
       let quantity = 0;
       if (outputData && outputData.data && outputData.data[0]) {

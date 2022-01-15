@@ -25,51 +25,52 @@ const CheckOutShipmentOptions = ({
             setClearShipment(false);
         }
         let isMounted = true;
-        if ((processPatch === true && patchUrl) || refreshShipmentList) {
-            //update previous step data to db
-            const patchOrderContent = async () => {
-                const response = await fetch(patchUrl, {
-                    method: 'PATCH',
-                    headers: {
-                        'Accept': 'application/vnd.api+json',
-                        'Content-type': 'application/vnd.api+json',
-                        'Commerce-Cart-Token': cartToken,
-                        'Authorization': headerAuthorization,
-                    },
-                    body: JSON.stringify({
-                        "data": {
-                            "type": orderType,
-                            "id": order,
-                            "attributes": {
-                                "email": values.email,
-                                "payment_instrument": {
-                                    "payment_gateway_id": values.paymentOption
+
+        //update previous step data to db
+        const patchOrderContent = async () => {
+            const response = await fetch(patchUrl, {
+                method: 'PATCH',
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-type': 'application/vnd.api+json',
+                    'Commerce-Cart-Token': cartToken,
+                    'Authorization': headerAuthorization,
+                },
+                body: JSON.stringify({
+                    "data": {
+                        "type": orderType,
+                        "id": order,
+                        "attributes": {
+                            "email": values.email,
+                            "payment_instrument": {
+                                "payment_gateway_id": values.paymentOption
+                            },
+                            "shipping_information": {
+                                "address": {
+                                    "country_code": 'NG',
+                                    "administrative_area": values.state.value,
+                                    "locality": values.city.value,
+                                    "address_line1": values.address_line1,
+                                    "given_name": values.firstName,
+                                    'family_name': values.lastName
                                 },
-                                "shipping_information": {
-                                    "address": {
-                                        "country_code": 'NG',
-                                        "administrative_area": values.state.value,
-                                        "locality": values.city.value,
-                                        "address_line1": values.address_line1,
-                                        "given_name": values.firstName,
-                                        'family_name': values.lastName
-                                    },
-                                    "field_customer_phone_number": values.contactNo
-                                },
-                            }
+                                "field_customer_phone_number": values.contactNo
+                            },
                         }
-                    })
+                    }
                 })
-                const outputData = await response.json();
-                if (isMounted && outputData && outputData.data
-                    && outputData.data.meta.shipping_rates) {
-                    setShipmentRates(outputData.data.meta.shipping_rates);
-                }
-                // console.log(outputData);
-                return () => {
-                    isMounted = false;
-                };
+            })
+            const outputData = await response.json();
+            if (isMounted && outputData && outputData.data
+                && outputData.data.meta.shipping_rates) {
+                setShipmentRates(outputData.data.meta.shipping_rates);
             }
+            // console.log(outputData);
+            return () => {
+                isMounted = false;
+            };
+        }
+        if ((processPatch === true && patchUrl) || refreshShipmentList) {
             patchOrderContent();
         }
     }, [processPatch, patchUrl, cartToken, headerAuthorization, refreshShipmentList,
@@ -88,12 +89,9 @@ const CheckOutShipmentOptions = ({
                         className='uk-text-lead uk-card uk-card-default form-type-radio'
                         style={{ cursor: 'pointer', padding: '2px' }}
                     >
-                        <FaShippingFast style={{ marginLeft: '5px' }} />
-                        <span className='uk-margin-left'>
-                            {rate.service.label}
-                        </span>
                         <input
                             className='form-radio uk-radio'
+                            style={{ margin: '0 0 5px -10px' }}
                             name="shipmentOption"
                             value={rate.id}
                             type="radio"
@@ -102,9 +100,13 @@ const CheckOutShipmentOptions = ({
                             defaultChecked={values.shipment === rate.id ?
                                 true : ''}
                         />
+                        <FaShippingFast className='uk-margin-left' style={{ marginTop: '-5px' }} />
+                        <span style={{ marginLeft: '5px' }}>
+                            {rate.service.label}
+                        </span>
                     </label>
                     {rate.description ?
-                        <div style={{ marginTop: '-7px', fontSize: 'small' }}>
+                        <div style={{ fontSize: 'small' }}>
                             {rate.description}
                         </div>
                         : ''}
@@ -122,7 +124,7 @@ const CheckOutShipmentOptions = ({
                         </div>
                         : ''}
                 </div >
-            rates.push(eachRate)
+            rates.push(eachRate);
         })
     };
 
@@ -165,15 +167,16 @@ const CheckOutShipmentOptions = ({
                     </>
                 }
 
-                <div className='uk-flex uk-flex-center uk-margin-medium'>
-                    <button
+                <div className='uk-flex uk-flex-center uk-margin-medium uk-grid-small'
+                    data-uk-grid>
+                    <div><button
                         type='button'
-                        className='uk-button uk-button-default uk-margin-right'
+                        className='uk-button uk-button-default'
                         onClick={(e) => previousStep()}
                     >
                         Change Address
-                    </button>
-                    <button
+                    </button></div>
+                    <div><button
                         type='submit'
                         className={'uk-button' + (values.shipment ? ' uk-button-primary' : '')}
                         disabled={rates.length > 0 ?
@@ -181,7 +184,7 @@ const CheckOutShipmentOptions = ({
                             : true}
                     >
                         Review Order
-                    </button>
+                    </button></div>
                 </div>
             </form>
         </>

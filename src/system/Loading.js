@@ -26,7 +26,7 @@ const Loading = (props) => {
 				if (isMounted) {
 					setContent(
 						<div id='loadingMessage'
-							className='uk-card uk-card-default uk-padding-large uk-margin-large-top'>
+							className='uk-card uk-card-default uk-padding-large uk-margin-top'>
 							{message}
 							{refresher ?
 								<div className='uk-text-center uk-margin-top'>

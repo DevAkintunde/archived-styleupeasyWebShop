@@ -39,7 +39,7 @@ const PasswordUpdateForm = ({ setStep, setUserProfile, setUpdateRes }) => {
         } else if (validator.isEmpty(repeatedPassword)) {
             setError({ 'repeated': 'Repeated your new password' });
         } else if (!validator.equals(repeatedPassword, newPassword)) {
-            setError({ 'repeated': 'Repeated new passwords are not the same' });
+            setError({ 'repeated': 'Repeated new password is not the same' });
         } else { setError() }
         // else if (!validator.isStrongPassword(newPassword)) {
 

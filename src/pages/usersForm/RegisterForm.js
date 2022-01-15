@@ -28,11 +28,7 @@ const RegisterForm = () => {
     const { loggedIn } = useContext(LoggedStatus);
     const { setUid } = useContext(LoggedUID);
 
-    const [emailError, setEmailError] = useState(false);
-    const [passwordError, setPasswordError] = useState(false);
-    const [repeatedPasswordError, setRepeatedPasswordError] = useState(false);
-    const [nameError, setNameError] = useState('');
-    const [contactError, setContactError] = useState('');
+    const [error, setError] = useState();
 
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
@@ -75,25 +71,36 @@ const RegisterForm = () => {
         }
     }, [history, jwtTokenBearer, loggedIn])
 
+    useEffect(() => {
+        setError();
+    }, [firstName, emailAddress, password,
+        repeatedPassword, contactNo])
+
     const onSubmit = (e) => {
         e.preventDefault();
-        if (!validator.isEmail(emailAddress)) {
-            setEmailError(true);
+        if (validator.isEmpty(firstName)) {
+            setError({ 'name': 'Kindly provide a name' });
+            document.querySelector('.form-item #firstName').scrollIntoView(
+                { behavior: 'smooth', block: 'center' });
+        } else if (!validator.isMobilePhone(contactNo, 'en-NG')) {
+            setError({ 'contact': 'A valid contact number is required for delivery of your purchases' });
+            document.querySelector('.form-item #contactNo').scrollIntoView(
+                { behavior: 'smooth', block: 'center' });
+        } else if (!validator.isEmail(emailAddress)) {
+            setError({ 'email': 'A valid email is required to sign up' });
+            document.querySelector('.form-item #emailAddress').scrollIntoView(
+                { behavior: 'smooth', block: 'center' });
         } else if (validator.isEmpty(password)) {
-            setPasswordError(true);
+            setError({ 'password': 'Password is required to sign up' });
+            document.querySelector('.form-item #password').scrollIntoView(
+                { behavior: 'smooth', block: 'center' });
         } else if (!validator.equals(repeatedPassword, password)) {
-            setRepeatedPasswordError(true);
-        } else if (validator.isEmpty(firstName)) {
-            setNameError(true);
-        } else if (validator.isEmpty(contactNo)) {
-            setContactError(true);
+            setError({ 'repeated': 'Repeated password is not the same.' });
+            document.querySelector('.form-item #repeatedPassword').scrollIntoView(
+                { behavior: 'smooth', block: 'center' });
         } else {
             setAsyncLoadingBoolean(true);
-            setEmailError(false);
-            setPasswordError(false);
-            setRepeatedPasswordError(true);
-            setContactError(false);
-            setNameError(false);
+            setError({});
             let isMounted = true;
 
             fetch(siteUrl + 'user/register?_format=json', {
@@ -112,7 +119,7 @@ const RegisterForm = () => {
                     "field_phone_nos": { "value": contactNo }
                 }),
             }).then((response) => {
-                console.log(response);
+                // console.log(response);
                 if (!response.ok) {
                     return response.json();
                 } else {
@@ -123,7 +130,7 @@ const RegisterForm = () => {
                     }
                 }
             }).then((resJson) => {
-                console.log(resJson);
+                // console.log(resJson);
                 if (isMounted) {
                     if (resJson.uuid && resJson.uuid.length > 0) {
                         setRegisterRes(resJson);
@@ -193,22 +200,20 @@ const RegisterForm = () => {
                                             First Name <FaAngleDoubleDown />
                                         </label>
                                         <input
-                                            style={{ border: nameError ? "2px solid red" : "" }}
+                                            style={{ border: error && error.name ? "2px solid red" : "" }}
                                             type='text'
-                                            name='firstName'
+                                            id='firstName'
                                             placeholder='Your name goes here'
                                             className='uk-width-1-1'
                                             defaultValue={firstName}
                                             onChange={(e) => setFirstName(e.target.value)}
                                         />
-                                        {nameError ?
-                                            (<div
-                                                style={{ color: "red" }}
-                                            >
-                                                Kindly provide a name
-                                            </div>)
-                                            : ''
-                                        }
+                                        {error && error.name ?
+                                            <div id='errorNotice'
+                                                style={{ color: "red", textAlign: 'center' }} >
+                                                {error.name}
+                                            </div>
+                                            : ''}
                                     </div>
                                     <div className='form-item'>
                                         <label
@@ -218,9 +223,8 @@ const RegisterForm = () => {
                                             Last Name <FaAngleDoubleDown />
                                         </label>
                                         <input
-                                            style={{ border: emailError ? "2px solid red" : "" }}
                                             type='text'
-                                            name='lastName'
+                                            id='lastName'
                                             placeholder='(optional)'
                                             className='uk-width-1-1'
                                             defaultValue={lastName}
@@ -236,22 +240,20 @@ const RegisterForm = () => {
                                         Contact Number <FaAngleDoubleDown />
                                     </label>
                                     <input
-                                        style={{ border: emailError ? "2px solid red" : "" }}
+                                        style={{ border: error && error.contact ? "2px solid red" : "" }}
                                         type='text'
-                                        name='contactNo'
+                                        id='contactNo'
                                         placeholder='You mobile phone number goes here'
                                         className='uk-width-1-1'
                                         defaultValue={contactNo}
                                         onChange={(e) => setContactNo(e.target.value)}
                                     />
-                                    {contactError ?
-                                        (<div
-                                            style={{ color: "red" }}
-                                        >
-                                            A contact number is required for delivery of your purchases
-                                        </div>)
-                                        : ''
-                                    }
+                                    {error && error.contact ?
+                                        <div id='errorNotice'
+                                            style={{ color: "red", textAlign: 'center' }} >
+                                            {error.contact}
+                                        </div>
+                                        : ''}
                                 </div>
                                 <div id='errorResponse'
                                     style={{ color: 'red', textAlign: 'center' }}
@@ -260,78 +262,69 @@ const RegisterForm = () => {
                             <div className='form-item uk-margin'>
                                 <label
                                     className='uk-display-block'
+                                    htmlFor='emailAddress'
                                 >
                                     Email <FaAngleDoubleDown />
                                 </label>
                                 <input
-                                    style={{ border: emailError ? "2px solid red" : "" }}
+                                    style={{ border: error && error.email ? "2px solid red" : "" }}
                                     type='text'
-                                    name='emailAddress'
+                                    id='emailAddress'
                                     placeholder='Enter email address'
                                     className='uk-width-1-1'
                                     defaultValue={emailAddress}
                                     onChange={(e) => setEmailAddress(e.target.value)}
                                 />
-                                {emailError ?
-                                    (
-                                        <div
-                                            style={{ color: "red" }}
-                                        >
-                                            Email is required to sign in
-                                        </div>
-                                    )
-                                    : ''
-                                }
+                                {error && error.email ?
+                                    <div id='errorNotice'
+                                        style={{ color: "red", textAlign: 'center' }} >
+                                        {error.email}
+                                    </div>
+                                    : ''}
                             </div>
                             <div className='form-item uk-margin'>
                                 <label
                                     className='uk-display-block'
+                                    htmlFor='password'
                                 >
                                     Password <FaAngleDoubleDown />
                                 </label>
                                 <input
-                                    style={{ border: passwordError ? "2px solid red" : "" }}
+                                    style={{ border: error && error.password ? "2px solid red" : "" }}
                                     type='password'
-                                    name='password'
+                                    id='password'
                                     placeholder='Enter password'
                                     className='uk-width-1-1'
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
-                                {passwordError ?
-                                    (
-                                        <div
-                                            style={{ color: "red" }}
-                                        >
-                                            Password is required to sign in
-                                        </div>
-                                    )
-                                    : ''
-                                }
+                                {error && error.password ?
+                                    <div id='errorNotice'
+                                        style={{ color: "red", textAlign: 'center' }} >
+                                        {error.password}
+                                    </div>
+                                    : ''}
                             </div>
                             <div className='form-item uk-margin'>
                                 <label
                                     className='uk-display-block'
+                                    htmlFor='repeatedPassword'
                                 >
                                     Repeat Password <FaAngleDoubleDown />
                                 </label>
                                 <input
-                                    style={{ border: repeatedPasswordError ? "2px solid red" : "" }}
+                                    style={{ border: error && error.repeated ? "2px solid red" : "" }}
                                     type='password'
-                                    name='password'
+                                    id='repeatedPassword'
                                     placeholder='Enter password'
                                     className='uk-width-1-1'
                                     onChange={(e) => setRepeatedPassword(e.target.value)}
                                 />
-                                {repeatedPasswordError ?
-                                    (
-                                        <div
-                                            style={{ color: "red" }}
-                                        >
-                                            Password is not the same.
-                                        </div>
-                                    )
-                                    : ''
-                                }
+                                {error && error.repeated ?
+                                    <div id='errorNotice'
+                                        style={{ color: "red", textAlign: 'center' }} >
+                                        {error.repeated}
+                                    </div>
+                                    : ''}
                             </div>
                         </div>
                         <>

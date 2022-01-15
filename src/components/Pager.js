@@ -190,19 +190,20 @@ const Pager = ({
       } else {
         pageContents();
       }
-      // window.scrollTo({
-      //   top: 250,
-      //   left: 0,
-      //   behavior: 'smooth'
-      // });
-      let getPageTitleById = document.getElementById('pageTitle');
-      if (getPageTitleById && pageContent.previous) {
-        getPageTitleById.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-          inline: 'start'
-        });
-      };
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+      // let getPageTitleById = document.getElementById('pageTitle');
+      // if (getPageTitleById && pageContent.previous) {
+      //   getPageTitleById.scrollIntoView({
+      //     behavior: 'smooth',
+      //     block: 'start',
+      //     inline: 'start'
+      //   });
+      // };
+      // console.log(getPageTitleById)
       setPageContentsRenderer(pageContent);
     }
   }, [pageContent, pageContents, pageContentsRenderer])

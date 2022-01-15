@@ -139,13 +139,23 @@ const CartsPage = () => {
 												cartToken={cartToken}
 												triggerRerenderCart={triggerRerenderCartPage}
 											/>
-											: <div className='uk-card uk-card-default'>
-												<Cart
-													cartItem={cartItem}
-													headerAuthorization={headerAuthorization}
-													cartToken={cartToken}
-													triggerRerenderCart={triggerRerenderCartPage}
-												/>
+											: <div className='uk-card uk-card-default'
+												style={{ paddingTop: '10px' }}
+											>
+												<label className='uk-heading-bullet uk-text-lead uk-display-block uk-margin-left'>
+													Other Cart(s)
+												</label>
+												<div className='uk-card-body uk-padding-small'
+													style={{ backgroundColor: Number.isInteger(index / 2) ? '#ba6b5708' : '#64ba5708' }}
+												>
+													<div className='uk-text-center uk-text-lead'>{index}</div>
+													<Cart
+														cartItem={cartItem}
+														headerAuthorization={headerAuthorization}
+														cartToken={cartToken}
+														triggerRerenderCart={triggerRerenderCartPage}
+													/>
+												</div>
 											</div>
 										}
 

@@ -186,6 +186,7 @@ const Address = ({
             }
             onChange={stateSelected}
             options={statesFromJson}
+            isSearchable={false}
           />
         </div>
         <div className="form-item uk-margin">
@@ -215,8 +216,10 @@ const Address = ({
             }
             onChange={citySelected}
             options={citiesFromStates}
+            isSearchable={false}
           />
-          <div>
+          <div className='uk-text-center'>(Select 'Not Listed' if your city not available)</div>
+          <div className='uk-margin'>
             <label htmlFor="inputCityOther"
               className={addCustomerCityStyling}
             >
@@ -237,21 +240,22 @@ const Address = ({
         <input type={`hidden`} value={`NG`} name={`${elementName}[country_code]`} />
       </div>
 
-      <div className='uk-flex uk-flex-center uk-margin-medium'>
-        <button
+      <div className='uk-flex uk-flex-center uk-margin-medium uk-grid-small'
+        data-uk-grid>
+        <div><button
           type='button'
-          className='uk-button uk-button-default uk-margin-right'
+          className='uk-button uk-button-default'
           onClick={(e) => previousStep()}
         >
           Switch payment
-        </button>
+        </button></div>
         {extraValidation && cityInputted === true ?
-          <button
+          <div><button
             type='submit'
             className='uk-button uk-button-primary'
           >
             {submitText}
-          </button>
+          </button></div>
           : <div className='uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-middle uk-alert-danger'>
             Incomplete Address
           </div>

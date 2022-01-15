@@ -9,10 +9,11 @@ import AddToCart from './AddToCart';
 import { FaTag } from 'react-icons/fa';
 
 const siteUrl = config.url.SITE_URL;
+const frontendUrl = config.url.APP_URL;
 const siteJsonUrl = config.url.SITE_JSON_URL;
 const siteJsonEntityUrl = config.url.SITE_ENTITY_ROUTER_URL;
 const ProductItem = (props) => {
-  //console.log(props);
+  // console.log(props);
   //console.log(props.match.url);
   //console.log(props.location.pathname);
   const product = props.match.params.product;
@@ -725,7 +726,7 @@ const ProductItem = (props) => {
               mainFeatures={ProductMainFeatures}
               quality={productQuality}
               variantProperties={importVariationProperties}
-              qrCodeUrl={siteUrl + aliasExt + '/' + currentVariation}
+              qrCodeUrl={frontendUrl + aliasExt}
             />
 
             <div className='uk-card uk-card-body'>
@@ -755,7 +756,7 @@ const ProductItem = (props) => {
               {productContent.data.attributes.field_youtube
                 && productContent.data.attributes.field_youtube.video_id ?
                 <iframe src={'https://www.youtube.com/embed/' + productContent.data.attributes.field_youtube.video_id}
-                  style={{ minWidth: '450px', minHeight: '315px' }}
+                  style={{ minWidth: '350px', maxWidth: '100%', minHeight: '220px' }}
                   frameBorder='0' allowFullScreen data-uk-responsive
                   title={productContent.data.attributes.title}
                   data-uk-video={'autoplay: inview'}>

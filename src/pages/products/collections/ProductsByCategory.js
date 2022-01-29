@@ -7,6 +7,7 @@ import Pager from '../../../components/Pager';
 import ProductTeaser from '../../../teasers/ProductTeaser';
 import { JsonLd } from 'react-schemaorg';
 import pluralize from 'pluralize/pluralize.js';
+import { PagerFilter } from '../../../components/Pager';
 
 const siteUrl = config.url.SITE_URL;
 const siteJsonUrl = config.url.SITE_JSON_URL;
@@ -238,14 +239,17 @@ const ProductsByCategory = (props) => {
       />
       <PageTitle title={products && products.length ? pluralize(pageTitle, products.length) : 'Loading Items'} className={'uk-text-capitalize'} />
       {products && products.length > 0 ?
-        <div className={'uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@xl uk-flex uk-flex-center'}
-          data-uk-grid={'masonry: true'}>
-          {products.map((product) => {
-            return (
-              <ProductTeaser productContent={product} key={product.data.id} />
-            )
-          })}
-        </div>
+        <>
+          <PagerFilter />
+          <div className={'uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@xl uk-flex uk-flex-center'}
+            data-uk-grid={'masonry: true'}>
+            {products.map((product) => {
+              return (
+                <ProductTeaser productContent={product} key={product.data.id} />
+              )
+            })}
+          </div>
+        </>
         :
         <Loading />}
       {dataUrl ?

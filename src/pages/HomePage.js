@@ -1,11 +1,12 @@
 import { JsonLd } from "react-schemaorg";
+import { lazy, Suspense } from "react";
 import HomeFeaturedBlock from "../blocks/homepage/HomeFeaturedBlock";
 import HomeNewArrivalBlock from "../blocks/homepage/HomeNewArrivalBlock";
-import HomeTrendingBlock from "../blocks/homepage/HomeTrendingBlock";
-import HomeBlogPreviewBlock from "../blocks/homepage/HomeBlogPreviewBlock";
 import { config } from "../DrupalUrl";
 import siteLogoImage from '../images/logo.png';
 
+const HomeTrendingBlock = lazy(() => import('../blocks/homepage/HomeTrendingBlock'));
+const HomeBlogPreviewBlock = lazy(() => import('../blocks/homepage/HomeBlogPreviewBlock'));
 const siteUrl = config.url.SITE_URL;
 const HomePage = () => {
   return (
@@ -19,20 +20,21 @@ const HomePage = () => {
           description: 'Shop with style',
           url: siteUrl,
           author: 'StyleUpEasy',
-          keywords: ['product', 'style', 'fashion', 'makeover', 'beauty']
+          keywords: ['product', 'style', 'fashion', 'makeover', 'beauty', 'material', 'ecommerce']
         }}
       />
       <div>
         <HomeNewArrivalBlock />
         <HomeFeaturedBlock />
-        <div className={'uk-margin-auto'}
-          style={{ paddingLeft: '40px', paddingRight: '40px' }}>
-          <HomeTrendingBlock />
-          <HomeBlogPreviewBlock />
-        </div>
+        <Suspense>
+          <div className={'uk-margin-auto'}
+            style={{ paddingLeft: '40px', paddingRight: '40px' }}>
+            <HomeTrendingBlock />
+            <HomeBlogPreviewBlock />
+          </div>
+        </Suspense>
       </div>
     </>
   )
 }
-
 export default HomePage

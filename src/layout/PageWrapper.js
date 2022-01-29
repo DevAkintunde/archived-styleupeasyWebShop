@@ -1,24 +1,27 @@
 import { Route, Switch } from 'react-router-dom';
-import HomePage from '../pages/HomePage';
-import About from '../pages/About';
-import Blog from '../pages/Blog';
-import Faq from '../pages/Faq';
-import Article from '../pages/nodes/Article';
-import ProductItem from '../pages/products/ProductItem';
-import Tag from '../pages/terms/Tag';
-import CheckOut from '../pages/checkout/CheckOut';
-import LoginPage from '../pages/usersForm/LoginPage';
-import CartsPage from '../pages/products/CartsPage';
-import Dashboard from '../pages/usersLoggedIn/Dashboard';
-import TrackOrder from '../pages/TrackOrder';
-import NewArrival from '../pages/NewArrival';
-import ProductTag from '../pages/terms/ProductTag';
-import Trending from '../pages/Trending';
-import ProductsByCategory from '../pages/products/collections/ProductsByCategory';
-import PaymentOptions from '../pages/PaymentOptions';
-import SearchProductPage from '../pages/SearchProductPage';
-import ContactPage from '../pages/ContactPage';
-import Page404 from '../pages/Page404';
+import { Suspense, lazy } from 'react';
+import Loading from '../system/Loading';
+
+const HomePage = lazy(() => import('../pages/HomePage'));
+const About = lazy(() => import('../pages/About'));
+const Blog = lazy(() => import('../pages/Blog'));
+const Faq = lazy(() => import('../pages/Faq'));
+const Article = lazy(() => import('../pages/nodes/Article'));
+const ProductItem = lazy(() => import('../pages/products/ProductItem'));
+const Tag = lazy(() => import('../pages/terms/Tag'));
+const CheckOut = lazy(() => import('../pages/checkout/CheckOut'));
+const LoginPage = lazy(() => import('../pages/usersForm/LoginPage'));
+const CartsPage = lazy(() => import('../pages/products/CartsPage'));
+const Dashboard = lazy(() => import('../pages/usersLoggedIn/Dashboard'));
+const TrackOrder = lazy(() => import('../pages/TrackOrder'));
+const NewArrival = lazy(() => import('../pages/NewArrival'));
+const ProductTag = lazy(() => import('../pages/terms/ProductTag'));
+const Trending = lazy(() => import('../pages/Trending'));
+const ProductsByCategory = lazy(() => import('../pages/products/collections/ProductsByCategory'));
+const PaymentOptions = lazy(() => import('../pages/PaymentOptions'));
+const SearchProductPage = lazy(() => import('../pages/SearchProductPage'));
+const ContactPage = lazy(() => import('../pages/ContactPage'));
+const Page404 = lazy(() => import('../pages/Page404'));
 
 const PageWrapper = () => {
 
@@ -29,68 +32,50 @@ const PageWrapper = () => {
 			<div className={'uk-width-1-1'}>
 				<div
 					className={'uk-margin-left uk-margin-right uk-margin-remove-left@s uk-margin-remove-right@s'}>
-					<Switch>
-						<Route path={'/'} exact={true}>
-							<HomePage />
-						</Route>
-						<Route path={'/about'}>
-							<About />
-						</Route>
-						<Route path={'/blog'}>
-							<Blog />
-						</Route>
-						<Route path={'/faq'}>
-							<Faq />
-						</Route>
-						<Route path={'/how-to-pay'}>
-							<PaymentOptions />
-						</Route>
-						<Route path={'/new-arrivals'}>
-							<NewArrival />
-						</Route>
-						<Route path={'/trending'}>
-							<Trending />
-						</Route>
-						<Route path={'/track-an-order'}>
-							<TrackOrder />
-						</Route>
-						<Route path={'/search'}>
-							<SearchProductPage />
-						</Route>
-						<Route path={'/contact'}>
-							<ContactPage />
-						</Route>
-						<Route path={'/sign-in'}>
-							<LoginPage />
-						</Route>
-						<Route path='/article/:alias'>
-							<Article />
-						</Route>
-						<Route path='/shop/:product/:title'>
-							<ProductItem />
-						</Route>
-						<Route path='/category/:baseCategory'>
-							<ProductsByCategory />
-						</Route>
-						<Route path='/tags/:alias'>
-							<Tag />
-						</Route>
-						<Route path='/product-tags/:alias'>
-							<ProductTag />
-						</Route>
-						<Route path='/checkout/:order'>
-							<CheckOut />
-						</Route>
-						<Route path='/cart' exact>
-							<CartsPage />
-						</Route>
-						<Route path='/signed-in'>
-							<Dashboard />
-						</Route>
-						<Route>
-							<Page404 />
-						</Route>
-					</Switch>
+					<Suspense fallback={<Loading />}>
+						<Switch>
+							<Route path={'/'} exact={true}
+								component={HomePage} />
+							<Route path={'/about'}
+								component={About} />
+							<Route path={'/blog'}
+								component={Blog} />
+							<Route path={'/faq'}
+								component={Faq} />
+							<Route path={'/how-to-pay'}
+								component={PaymentOptions} />
+							<Route path={'/new-arrivals'}
+								component={NewArrival} />
+							<Route path={'/trending'}
+								component={Trending} />
+							<Route path={'/track-an-order'}
+								component={TrackOrder} />
+							<Route path={'/search'}
+								component={SearchProductPage} />
+							<Route path={'/contact'}
+								component={ContactPage} />
+							<Route path={'/sign-in'}
+								component={LoginPage} />
+							<Route path='/article/:alias'
+								component={Article} />
+							<Route path='/browse/:product/:title'
+								component={ProductItem} />
+							<Route path='/category/:baseCategory'
+								component={ProductsByCategory} />
+							<Route path='/tags/:alias'
+								component={Tag} />
+							<Route path='/product-tags/:alias'
+								component={ProductTag} />
+							<Route path='/checkout/:order'
+								component={CheckOut} />
+							<Route path='/cart' exact={true}
+								component={CartsPage} />
+							<Route path='/signed-in'
+								component={Dashboard} />
+							<Route
+								component={Page404} />
+						</Switch>
+					</Suspense>
 				</div>
 			</div>
 		</main>

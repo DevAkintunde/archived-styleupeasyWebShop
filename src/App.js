@@ -35,13 +35,16 @@ const siteJsonUrl = config.url.SITE_JSON_URL;
 const App = () => {
   const location = useLocation();
 
+  let pageLoaded = document.getElementById('page-wrapper');
   useEffect(() => {
     window.scrollTo({
       top: 0,
       left: 0,
       behavior: 'smooth'
     });
-  }, [location.key]);
+  }, [location.key, pageLoaded]);
+  // console.log(pageLoaded);
+  // console.log(location.key);
 
   const [jwtTokenBearer, setJwtTokenBearer] = useState(localStorage.getItem('signOnToken'));
   const token = useMemo(() => (
@@ -158,73 +161,80 @@ const App = () => {
 
   useEffect(() => {
     const getCarts = async () => {
-      let response = ''
+      let response = '';
       if (headerAuthorization) {
-        response = await fetch(siteJsonUrl + 'carts?include=order_items.purchased_entity.field_product_images', {
+        response = await fetch(siteJsonUrl + 'carts?include=order_items.purchased_entity.field_product_images,order_items.purchased_entity.product_id', {
           method: 'GET',
           headers: {
             'Accept': 'application/vnd.api+json',
             'Content-type': 'application/vnd.api+json',
             'Authorization': headerAuthorization
           }
-        })
+        });
       } else {
-        response = await fetch(siteJsonUrl + 'carts?include=order_items.purchased_entity.field_product_images', {
+        response = await fetch(siteJsonUrl + 'carts?include=order_items.purchased_entity.field_product_images,order_items.purchased_entity.product_id', {
           method: 'GET',
           headers: {
             'Accept': 'application/vnd.api+json',
             'Content-type': 'application/vnd.api+json',
             'Commerce-Cart-Token': cartToken
           }
-        })
+        });
       }
       const outputData = await response.json();
       // console.log(outputData);
 
       let quantity = 0;
       if (outputData && outputData.data && outputData.data[0]) {
-        let items = []
-        const order = outputData.data[0]
+        let items = [];
+        const order = outputData.data[0];
         outputData && outputData.included && outputData.included.forEach((orderItem) => {
           if (orderItem.type.includes('order-item--')) {
             quantity = quantity + (orderItem.attributes.quantity * 1)
             if (order.id === orderItem.relationships.order_id.data.id) {
-              let itemOrderProps = ''
+              let itemOrderProps = '';
               outputData && outputData.included.forEach((itemPurchased) => {
                 if (itemPurchased.type.includes('product-variation')) {
                   if (itemPurchased.id === orderItem.relationships.purchased_entity.data.id) {
 
-                    let itemImageFile = ''
+                    let itemImageFile = '';
+                    let productUrl = '';
                     outputData && outputData.included.forEach((itemImage) => {
                       if (itemImage.type.includes('file--file')) {
                         if (itemImage.id === itemPurchased.relationships.field_product_images.data[0].id) {
-                          itemImageFile = itemImage.attributes.image_style_uri.thumbnail
+                          itemImageFile = itemImage.attributes.image_style_uri.thumbnail;
 
                         }
+                      } else if (itemImage.type.includes('product--')) {
+                        if (itemImage.id === itemPurchased.relationships.product_id.data.id) {
+                          productUrl = itemImage.attributes.path.alias + '/' + itemPurchased.id;
+                        }
                       }
-                    })
+                    });
                     const itemProps = {
                       'purchased': itemPurchased,
-                      'image': itemImageFile
+                      'image': itemImageFile,
+                      'product_url': productUrl
                     }
-                    itemOrderProps = itemProps
+                    itemOrderProps = itemProps;
                   }
                 }
               })
               const thisOrderProps = {
                 item: orderItem,
                 itemProps: itemOrderProps
-              }
-              items.unshift(thisOrderProps)
+              };
+              items.unshift(thisOrderProps);
             }
           }
         })
+        // if (!cartCount) {
         setCartCount(quantity);
-
+        // }
         const thisOrderCarts = {
           order: order,
           items: items
-        }
+        };
         setCartModalItems(thisOrderCarts);
       } else {
         setCartCount(quantity);
@@ -262,18 +272,16 @@ const App = () => {
                   <section className={'uk-margin-medium-top uk-margin-medium-bottom'}
                     data-uk-grid>
                     <SideBar />
-                    <PageWrapper cartCount={cartCount} />
+                    <PageWrapper />
                   </section>
                   <Footer />
 
-                  {location.pathname !== '/cart' ?
-                    <CartModal
-                      cartModalItems={cartModalItems}
-                      headerAuthorization={headerAuthorization}
-                      cartToken={cartToken}
-                      cartCount={cartCount}
-                    />
-                    : ''}
+                  <CartModal
+                    cartModalItems={cartModalItems}
+                    headerAuthorization={headerAuthorization}
+                    cartToken={cartToken}
+                    cartCount={cartCount}
+                  />
                 </div>
               </InCartCountTrigger.Provider>
             </LoggedUserName.Provider>

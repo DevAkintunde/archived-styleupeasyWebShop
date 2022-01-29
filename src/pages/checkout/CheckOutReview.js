@@ -8,7 +8,7 @@ import CheckOutProcessedPayment from "./CheckOutProcessedPayment";
 import { Link } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import { LoggedStatus } from "../../App";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaBitcoin, FaCheckCircle, FaExclamationCircle, FaWallet } from "react-icons/fa";
 
 const paystackKey = config.payment.paystack
 //const coinbaseKey = config.payment.coinbase
@@ -24,12 +24,11 @@ const CheckOutReview = ({
     orderType,
     orderRawData
 }) => {
-
     const [step, setStep] = useState();
-    //const [paymentResponse, setPaymentResponse] = useState();
+    const [currentOrderState, setCurrentOrderState] = useState(orderState);
     const [refreshReview, setRefreshReview] = useState();
     const [orderData, setOrderData] = useState();
-    const { loggedIn } = useContext(LoggedStatus)
+    const { loggedIn } = useContext(LoggedStatus);
 
     useEffect(() => {
         let isMounted = true;
@@ -57,11 +56,10 @@ const CheckOutReview = ({
                     "attributes": {
                         "shipping_method": values.shipment
                     }
-
                 }
             })
         }
-        const asyncFetch = orderState === 'completed' ? getCall : patchCall
+        const asyncFetch = (orderState === 'completed') ? getCall : patchCall;
         //update previous step data to db or GET order if order is completed
         const patchOrderContent = async () => {
             const response = await fetch(patchUrl, asyncFetch);
@@ -70,46 +68,58 @@ const CheckOutReview = ({
                 setOrderData(outputData);
             }
         }
-        patchOrderContent();
+        if (order) {
+            patchOrderContent();
+        }
         return () => {
             isMounted = false;
         };
     }, [patchUrl, cartToken, headerAuthorization,
         order, orderState, orderType, values.shipment, refreshReview])
 
-    //console.log(orderData)
+    // console.log(orderData)
 
     const processedPayment = () => {
         setStep('processedPayment');
     };
 
-    let paymentCallback = ''
-    if (orderData && orderData.data && orderData.data.links) {
-        paymentCallback = orderData.data.links["payment-approve"].href
+    let paymentChoice = '';
+    if (orderData && orderData.data && orderData.data.attributes
+        && orderData.data.attributes.payment_instrument
+        && orderData.data.attributes.payment_instrument.payment_gateway_id) {
+        paymentChoice = orderData.data.attributes.payment_instrument.payment_gateway_id;
     }
-    let orderAmount = ''
+    let paymentCallback = '';
+    if (orderData && orderData.data && orderData.data.links) {
+        if (orderData.data.links["payment-approve"]) {
+            paymentCallback = orderData.data.links["payment-approve"].href;
+        } else if (orderData.data.links["payment-create"]) {
+            paymentCallback = orderData.data.links["payment-create"].href;
+        }
+    }
+    let orderAmount = '';
     if (orderData && orderData.data
         && orderData.data.attributes.order_total &&
         orderData.data.attributes.order_total.total.number) {
-        const orderAmountString = orderData.data.attributes.order_total.total.number
-        orderAmount = (orderAmountString * 1).toFixed(2) * 100
+        const orderAmountString = orderData.data.attributes.order_total.total.number;
+        orderAmount = (orderAmountString * 1).toFixed(2) * 100;
     }
-    let orderEmail = ''
+    let orderEmail = '';
     if (orderData && orderData.data
         && orderData.data.attributes.email) {
-        orderEmail = orderData.data.attributes.email
+        orderEmail = orderData.data.attributes.email;
     }
-    let buyerName = ''
+    let buyerName = '';
     if (orderData && orderData.data
         && orderData.data.attributes.shipping_information.address
         && orderData.data.attributes.shipping_information.address.given_name) {
-        buyerName = orderData.data.attributes.shipping_information.address.given_name
+        buyerName = orderData.data.attributes.shipping_information.address.given_name;
     }
-    let buyerPhoneContact = ''
+    let buyerPhoneContact = '';
     if (orderData && orderData.data
         && orderData.data.attributes.shipping_information
         && orderData.data.attributes.shipping_information.field_customer_phone_number) {
-        buyerPhoneContact = orderData.data.attributes.shipping_information.field_customer_phone_number
+        buyerPhoneContact = orderData.data.attributes.shipping_information.field_customer_phone_number;
     }
 
     let shippingRate = '';
@@ -123,6 +133,53 @@ const CheckOutReview = ({
     }
     //console.log(shippingRate)
 
+    //Cash on Delivery option
+    const codProcessor = (e) => {
+        e.target.classList.add('submit-loading');
+        const buttonsParent = e.target.parentNode.childNodes;
+        for (let i = 0; i < buttonsParent.length; i++) {
+            if (!buttonsParent[i].classList.contains('submit-loading')) {
+                buttonsParent[i].setAttribute('hidden', true);
+            }
+        }
+        fetch(paymentCallback, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-type': 'application/vnd.api+json',
+                'Commerce-Cart-Token': cartToken,
+                'Authorization': headerAuthorization,
+            },
+            body: JSON.stringify({
+                "data": {
+                    "type": "payment--payment-default",
+                    "id": order
+                }
+            })
+        }).then((res) => {
+            if (res.status === 201) {
+                setCurrentOrderState('completed');
+                let getPaymentSectionId = document.getElementById('totalPaymentDue');
+                if (getPaymentSectionId) {
+                    getPaymentSectionId.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'center'
+                    });
+                }
+            } else {
+                for (let i = 0; i < buttonsParent.length; i++) {
+                    if (buttonsParent[i].classList.contains('submit-loading')) {
+                        buttonsParent[i].classList.remove('submit-loading');
+                    }
+                    if (buttonsParent[i].hidden) {
+                        buttonsParent[i].hidden = false;
+                    }
+                }
+            }
+        })
+    }
+    //Paystack payment option
     const paystackPay = {
         email: orderEmail,
         amount: orderAmount,
@@ -147,6 +204,20 @@ const CheckOutReview = ({
         onSuccess: (response) => { processedPayment() },
         onClose: () => toast("Your payment has been cancelled. You can resume it anytime here"),
     }
+    //cryptocurrency option using Coinbase
+
+    //outputted payment gateway processor
+    const paymentGateway = paymentChoice === 'paystack' ?
+        <PaystackButton
+            className={'uk-button uk-button-primary'}
+            {...paystackPay}
+        />
+        : paymentChoice === 'cod' ?
+            <button
+                className={'uk-button uk-button-primary'}
+                onClick={codProcessor}>Submit Order</button>
+            : ''
+
     const triggerReviewRefresh = () => {
         setRefreshReview(Date.now());
     };
@@ -169,7 +240,7 @@ const CheckOutReview = ({
                                 cartToken={cartToken}
                             />
                         </div>
-                        {orderState === 'completed' ?
+                        {currentOrderState === 'completed' ?
                             <button
                                 type='button'
                                 className='uk-button uk-button-default uk-margin'
@@ -206,7 +277,8 @@ const CheckOutReview = ({
                                         <div>
                                             Email: {
                                                 orderData.data.attributes.email ?
-                                                    orderData.data.attributes.email
+                                                    <span style={{ overflowWrap: 'anywhere' }}>
+                                                        {orderData.data.attributes.email}</span>
                                                     : 'nil'
                                             }
                                         </div>
@@ -228,18 +300,28 @@ const CheckOutReview = ({
                                     </label>
                                     <div className='uk-padding-small'>
                                         <div>
-                                            {
-                                                orderData.data.attributes.payment_instrument ?
-                                                    (orderData.data.attributes.payment_instrument.payment_gateway_id === 'paystack') ?
+                                            {paymentChoice === 'paystack' ?
+                                                <>
+                                                    <span>{paystack}</span>
+                                                    <span className='uk-margin-left uk-text-emphasis'>
+                                                        Paystack
+                                                    </span>
+                                                </>
+                                                : paymentChoice === 'cod' ?
+                                                    <>
+                                                        <FaWallet />
+                                                        <span className='uk-margin-left uk-text-emphasis'>
+                                                            Cash on delivery
+                                                        </span>
+                                                    </>
+                                                    : paymentChoice === 'coinbase' ?
                                                         <>
-                                                            <span>{paystack}</span>
+                                                            <FaBitcoin />
                                                             <span className='uk-margin-left uk-text-emphasis'>
-                                                                {orderData.data.attributes.payment_instrument.payment_gateway_id}
+                                                                Cryptocurrency
                                                             </span>
                                                         </>
-                                                        : ''
-                                                    : orderData.data.attributes.payment_instrument.payment_gateway_id
-                                            }
+                                                        : "Oops! Can't verify..."}
                                         </div>
                                     </div>
                                 </section>
@@ -329,7 +411,7 @@ const CheckOutReview = ({
                                         </div>
                                     </div>
                                 </section>
-                                <section
+                                <section id='totalPaymentDue'
                                     className='uk-card uk-card-default uk-padding-small uk-margin'
                                 >
                                     <label className='uk-heading-bullet uk-text-lead uk-display-block'>
@@ -348,19 +430,28 @@ const CheckOutReview = ({
                                                     orderData.data.attributes.order_total.total.formatted
                                                     : 'nil'
                                             }
-                                            {orderState === 'completed' ?
+                                            {currentOrderState === 'completed' && paymentChoice !== 'cod' ?
                                                 <div>
                                                     <FaCheckCircle style={{ fontSize: '50' }} className={'uk-text-success'} />
                                                     <span className={'uk-text-small'}>Paid</span>
                                                 </div>
-                                                : ''}
+                                                : currentOrderState === 'completed' && paymentChoice === 'cod' ?
+                                                    <div>
+                                                        <FaExclamationCircle style={{ fontSize: '50' }} className={'uk-text-success'} />
+                                                        <span className={'uk-text-small'}>Pending</span>
+                                                    </div> : ''}
                                         </div>
                                     </div>
+                                    {currentOrderState === 'completed' ?
+                                        <div className='uk-text-lead uk-text-center uk-margin uk-text-primary'>
+                                            Order Completed
+                                        </div>
+                                        : ''}
                                 </section>
 
                                 <div className='uk-flex uk-flex-center uk-margin-medium'>
                                     {
-                                        orderState !== 'completed' ?
+                                        currentOrderState !== 'completed' ?
                                             <>
                                                 <button
                                                     type='button'
@@ -369,15 +460,12 @@ const CheckOutReview = ({
                                                 >
                                                     Change Delivery
                                                 </button>
-                                                {paystackPay ?
-                                                    <PaystackButton
-                                                        className={'uk-button uk-button-primary'}
-                                                        {...paystackPay}
-                                                    />
+                                                {paymentGateway ?
+                                                    paymentGateway
                                                     : ''}
                                             </>
                                             : loggedIn === true ?
-                                                <Link to={orderData.data.links.self.href}
+                                                <Link to={'/signed-in/orders/' + orderData.data.id}
                                                     className='uk-button uk-button-primary'
                                                 >
                                                     See this Order
@@ -388,10 +476,15 @@ const CheckOutReview = ({
                                                 >
                                                     Sign-in with Email
                                                 </Link>
-
                                     }
-
                                 </div>
+                                {currentOrderState === 'completed' ?
+                                    <div className='uk-text-center'>
+                                        <Link to='/in-stock' className={'uk-button uk-button-default'}>
+                                            Keep Shopping
+                                        </Link>
+                                    </div>
+                                    : ''}
                             </>
                             :
                             <Loading refresh={true} refreshTrigger={triggerReviewRefresh} />

@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 
 const Loading = (props) => {
 	const location = useLocation();
-	//console.log(location);
 	//custom styling for the loader
 	const styling = props.styling;
 	//the message content

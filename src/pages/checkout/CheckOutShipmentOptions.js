@@ -13,17 +13,14 @@ const CheckOutShipmentOptions = ({
     headerAuthorization,
     cartToken,
     order,
-    orderType
+    orderType,
+    reservedShipmentList,
+    setReservedShipmentList
 }) => {
 
     const [shipmentRates, setShipmentRates] = useState();
     const [refreshShipmentList, setRefreshShipmentList] = useState();
-    const [clearShipment, setClearShipment] = useState(true);
     useEffect(() => {
-        if (clearShipment) {
-            values.shipment = '';
-            setClearShipment(false);
-        }
         let isMounted = true;
 
         //update previous step data to db
@@ -70,15 +67,23 @@ const CheckOutShipmentOptions = ({
                 isMounted = false;
             };
         }
-        if ((processPatch === true && patchUrl) || refreshShipmentList) {
+        if ((processPatch === true && patchUrl && !reservedShipmentList) || refreshShipmentList) {
             patchOrderContent();
         }
     }, [processPatch, patchUrl, cartToken, headerAuthorization, refreshShipmentList,
-        order, orderType, values, clearShipment])
+        order, orderType, reservedShipmentList,
+        values.contactNo, values.firstName, values.lastName, values.address_line1,
+        values.city, values.state, values.paymentOption, values.email])
 
     let rates = [];
-    if (shipmentRates) {
-        shipmentRates && shipmentRates.forEach((rate) => {
+    let shipmentList = [];
+    if (reservedShipmentList) {
+        shipmentList = reservedShipmentList;
+    } else {
+        shipmentList = shipmentRates;
+    }
+    if (shipmentList) {
+        shipmentList && shipmentList.forEach((rate) => {
             const eachRate =
                 < div
                     className='uk-width-1-1 uk-display-block form-item uk-margin'
@@ -134,10 +139,16 @@ const CheckOutShipmentOptions = ({
         if (validator.isEmpty(values.shipment)) {
             setError(true);
         } else {
-            setError(false);
+            // setError(false);
+            setReservedShipmentList(shipmentList);
             nextStep();
         }
     };
+    const backToPrevious = () => {
+        values.shipment = '';
+        setReservedShipmentList();
+        previousStep();
+    }
     //trigger async refresh if timed-out.
     const triggerVendorRefresh = () => {
         setRefreshShipmentList(Date.now());
@@ -145,6 +156,7 @@ const CheckOutShipmentOptions = ({
     // console.log(rates);
     return (
         <>
+            <h4 className='uk-text-muted uk-text-center'>Select a shipment option</h4>
             <form
                 onSubmit={submitFormData}>
                 {rates.length > 0 ?
@@ -172,9 +184,9 @@ const CheckOutShipmentOptions = ({
                     <div><button
                         type='button'
                         className='uk-button uk-button-default'
-                        onClick={(e) => previousStep()}
+                        onClick={backToPrevious}
                     >
-                        Change Address
+                        Switch Payment
                     </button></div>
                     <div><button
                         type='submit'
@@ -190,5 +202,4 @@ const CheckOutShipmentOptions = ({
         </>
     )
 }
-
 export default CheckOutShipmentOptions

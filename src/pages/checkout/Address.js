@@ -6,7 +6,7 @@ import { FaAngleDoubleDown } from 'react-icons/fa';
 
 const Address = ({
   elementName, handleFormData, values, extraValidation,
-  previousStep, submitText
+  previousStep, previousText, submitText
 }) => {
 
   var statesFromJson = [];
@@ -247,7 +247,7 @@ const Address = ({
           className='uk-button uk-button-default'
           onClick={(e) => previousStep()}
         >
-          Switch payment
+          {previousText}
         </button></div>
         {extraValidation && cityInputted === true ?
           <div><button

@@ -570,69 +570,74 @@ const ProductTeaser = ({ productContent }) => {
                 </Link></h2>
               : ''}
             <div>
-              <form>
-                <div className='uk-grid-small uk-margin-small uk-flex uk-flex-center uk-flex-bottom' data-uk-grid>
-                  {colourOptions && colourOptions.length > 0 ?
-                    <span
-                      id={'colour-attribute'}
-                      style={{ position: 'absolute', right: '20px', top: '35px' }}
-                    >
-                      <fieldset
-                        required={'required'}
-                        className='product-colour-attribute'
-                        onChange={colourChange}
+              {(colourOptions && colourOptions.length > 0)
+                || (ageOptions && ageOptions.options.length > 0)
+                || (sexOptions && sexOptions.options.length > 0)
+                || (sizeOptions && sizeOptions.options.length > 0) ?
+                <form>
+                  <div className='uk-grid-small uk-margin-small uk-flex uk-flex-center uk-flex-bottom' data-uk-grid>
+                    {colourOptions && colourOptions.length > 0 ?
+                      <span
+                        id={'colour-attribute'}
+                        style={{ position: 'absolute', right: '20px', top: '35px' }}
                       >
-                        <div className='fieldset-wrapper uk-flex uk-flex-bottom'>
-                          {colourOptions}
-                        </div>
-                      </fieldset>
-                    </span>
-                    : ''
-                  }
-                  {ageOptions && ageOptions.options.length > 0 ?
-                    <span>
-                      <select id={'age-attribute'}
-                        style={{
-                          padding: '2px', cursor: 'pointer',
-                          border: '1px solid #612e35', borderRadius: '10px'
-                        }}
-                        value={ageOptions.defaultValue}
-                        onChange={ageChange}>
-                        {ageOptions.options}
-                      </select>
-                    </span>
-                    : ''
-                  }
-                  {sexOptions && sexOptions.options.length > 0 ?
-                    <span>
-                      <select id={'sex-attribute'}
-                        style={{
-                          padding: '2px', cursor: 'pointer',
-                          border: '1px solid #612e35', borderRadius: '10px'
-                        }}
-                        value={sexOptions.defaultValue}
-                        onChange={sexChange}>
-                        {sexOptions.options}
-                      </select>
-                    </span>
-                    : ''
-                  }
-                  {sizeOptions && sizeOptions.options.length > 0 ?
-                    <span>
-                      <select id={'size-attribute'}
-                        style={{
-                          padding: '2px', cursor: 'pointer',
-                          border: '1px solid #612e35', borderRadius: '10px'
-                        }}
-                        value={sizeOptions.defaultValue}
-                        onChange={sizeChange}>
-                        {sizeOptions.options}
-                      </select>
-                    </span>
-                    : ''
-                  }
-                </div>
-              </form>
+                        <fieldset
+                          required={'required'}
+                          className='product-colour-attribute'
+                          onChange={colourChange}
+                        >
+                          <div className='fieldset-wrapper uk-flex uk-flex-bottom'>
+                            {colourOptions}
+                          </div>
+                        </fieldset>
+                      </span>
+                      : ''
+                    }
+                    {ageOptions && ageOptions.options.length > 0 ?
+                      <span>
+                        <select id={'age-attribute'}
+                          style={{
+                            padding: '2px', cursor: 'pointer',
+                            border: '1px solid #612e35', borderRadius: '10px'
+                          }}
+                          value={ageOptions.defaultValue}
+                          onChange={ageChange}>
+                          {ageOptions.options}
+                        </select>
+                      </span>
+                      : ''
+                    }
+                    {sexOptions && sexOptions.options.length > 0 ?
+                      <span>
+                        <select id={'sex-attribute'}
+                          style={{
+                            padding: '2px', cursor: 'pointer',
+                            border: '1px solid #612e35', borderRadius: '10px'
+                          }}
+                          value={sexOptions.defaultValue}
+                          onChange={sexChange}>
+                          {sexOptions.options}
+                        </select>
+                      </span>
+                      : ''
+                    }
+                    {sizeOptions && sizeOptions.options.length > 0 ?
+                      <span>
+                        <select id={'size-attribute'}
+                          style={{
+                            padding: '2px', cursor: 'pointer',
+                            border: '1px solid #612e35', borderRadius: '10px'
+                          }}
+                          value={sizeOptions.defaultValue}
+                          onChange={sizeChange}>
+                          {sizeOptions.options}
+                        </select>
+                      </span>
+                      : ''
+                    }
+                  </div>
+                </form>
+                : ''}
 
               <div className={'uk-flex uk-flex-center'} data-uk-grid>
                 <AddToCart

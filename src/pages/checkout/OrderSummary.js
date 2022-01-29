@@ -60,9 +60,9 @@ const OrderSummary = (props) => {
                 </tbody>
               </table>
             </div>
-            <div className='uk-grid-small uk-text-center uk-margin' data-uk-grid>
+            <div className='uk-grid-small uk-flex uk-flex-right uk-margin' data-uk-grid>
               <label>
-                SubTotal
+                SubTotal:
               </label>
               <span
                 style={{ fontWeight: 'bold' }}

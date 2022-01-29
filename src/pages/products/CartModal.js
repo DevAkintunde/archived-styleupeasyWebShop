@@ -95,6 +95,14 @@ const CartModal = ({
 			}
 		}
 		if (updateTotal === true) {
+			//realtime counter
+			const cartCounter = document.querySelectorAll('.cart-counter');
+			if (cartCounter.length > 0) {
+				cartCounter.forEach((thisCounter) => {
+					thisCounter.innerText = (thisCounter.innerText * 1) + 1;
+				});
+			}
+
 			const thisRow = e.target.parentNode.parentNode.childNodes;
 			for (let k = 0; k < thisRow.length; k++) {
 				const thisCol = thisRow[k];
@@ -180,6 +188,14 @@ const CartModal = ({
 			}
 		}
 		if (updateTotal === true) {
+			//realtime counter
+			const cartCounter = document.querySelectorAll('.cart-counter');
+			if (cartCounter.length > 0) {
+				cartCounter.forEach((thisCounter) => {
+					thisCounter.innerText = (thisCounter.innerText * 1) - 1;
+				});
+			}
+
 			const thisRow = e.target.parentNode.parentNode.childNodes;
 			for (let k = 0; k < thisRow.length; k++) {
 				const thisCol = thisRow[k];
@@ -254,7 +270,24 @@ const CartModal = ({
 				})
 			});
 			if (response.status === 204) {
-				itemRow.remove();
+				//deduct from cart counter
+				const cartCounter = document.querySelectorAll('.cart-counter');
+				if (cartCounter.length > 0) {
+					itemRow.childNodes.forEach((data) => {
+						if (data.id === 'quantity-input-group') {
+							const qtyGroup = data.childNodes;
+							qtyGroup.forEach((input) => {
+								if (input.id === 'quantity-input') {
+									cartCounter.forEach((thisCounter) => {
+										thisCounter.innerText = (thisCounter.innerText * 1) - (input.value * 1);
+										// Remove row from list.
+										// itemRow.remove();
+									});
+								}
+							})
+						}
+					})
+				}
 				setCartCountTrigger(Date.now());
 				toast("Item removed from cart");
 
@@ -419,12 +452,10 @@ const CartModal = ({
 			}
 		}
 	}
-	const closeModal = (e) => {
-		//console.log(e.target.parentNode);
+	const closeModal = () => {
 		if (cartUpdated) {
 			setTimedCartTrigger(Date.now());
 			const cartOverlayContainer = document.getElementById('cart-form-modal-container');
-			//console.log(cartOverlayContainer);
 			if (cartOverlayContainer) {
 				cartOverlayContainer.classList.add('uk-hidden');
 			}
@@ -432,7 +463,14 @@ const CartModal = ({
 			setOpenModal(false);
 		}
 	}
-	//console.log(cartModalItems);
+	//close modal if page redirect happens while modal is opened
+	useEffect(() => {
+		const cartOverlayContainer = document.getElementById('cart-form-modal-container');
+		if (cartOverlayContainer) {
+			cartOverlayContainer.classList.add('uk-hidden');
+		}
+	}, [history.location.key])
+
 	return (
 		<>
 			<>
@@ -482,9 +520,15 @@ const CartModal = ({
 																return (
 																	<tr key={purchasedItem.itemProps.purchased.id}
 																		id={purchasedItem.item.id + '/' + purchasedItem.item.type}>
-																		<td>{index + 1}</td>
+																		{cartModalItems.items.length > 1 ?
+																			<td>{index + 1}</td>
+																			: null}
 																		<td>
-																			<img src={purchasedItem.itemProps.image} alt={purchasedItem.item.attributes.title} /></td>
+																			<Link
+																				to={purchasedItem.itemProps.product_url}>
+																				<img src={purchasedItem.itemProps.image} alt={purchasedItem.item.attributes.title} />
+																			</Link>
+																		</td>
 																		<td className='uk-visible@s'>
 																			{purchasedItem.item.attributes.title.split(' - ')[0]}
 																		</td>
@@ -585,7 +629,11 @@ const CartModal = ({
 													</tbody>
 													<tfoot className='uk-text-center'>
 														<tr>
-															<td></td><td className={'uk-visible@s'}></td><td></td><td></td>
+															{cartModalItems && cartModalItems.items &&
+																cartModalItems.items.length > 1 ?
+																<td></td>
+																: null}
+															<td className={'uk-visible@s'}></td><td></td><td></td>
 															<td>
 																SubTotal
 															</td>
@@ -658,7 +706,7 @@ const CartModal = ({
 				}
 
 				<button
-					className={'uk-text-lead uk-margin-small-bottom uk-position-z-index'}
+					className={'uk-text-lead uk-margin-small-bottom uk-position-z-index' + (history.location.pathname === '/cart' ? ' uk-hidden' : '')}
 					style={{
 						color: '#310b0b!important',
 						background: openModal === true ? '#fff' : '#ffffffdb',
@@ -681,7 +729,7 @@ const CartModal = ({
 						style={{ color: '#310b0b', }}
 					/>
 					<span
-						className={'uk-text-small uk-text-light'}
+						className={'uk-text-small uk-text-light cart-counter'}
 						style={{
 							padding: '0 0.2em',
 							border: '1px solid',

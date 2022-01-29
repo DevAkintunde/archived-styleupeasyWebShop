@@ -82,42 +82,51 @@ const UserProfile = () => {
               {userProfile && userProfile.data ?
                 <>
                   <div className='uk-card uk-card-default uk-card-body'>
-                    <div>
+                    <div className='uk-grid-small uk-margin-small' data-uk-grid>
                       <label className='uk-text-muted'>First Name:</label>
-                      <span className='uk-margin-left uk-text-lead uk-text-capitalize'>
+                      <div className='uk-text-capitalize uk-margin-remove'
+                        style={{ overflowWrap: 'anywhere' }}>
                         {userProfile.data.attributes.field_fname}
-                      </span>
+                      </div>
                     </div>
-                    <div>
+                    <div className='uk-grid-small uk-margin-small' data-uk-grid>
                       <label className='uk-text-muted'>Last Name:</label>
-                      <span className='uk-margin-left uk-text-lead uk-text-capitalize'>
+                      <div className='uk-text-capitalize uk-margin-remove'
+                        style={{ overflowWrap: 'anywhere' }}>
                         {userProfile.data.attributes.field_lname ?
                           userProfile.data.attributes.field_lname
                           : '--'}
-                      </span>
+                      </div>
                     </div>
-                    <div>
+                    <div className='uk-grid-small uk-margin-small' data-uk-grid>
                       <label className='uk-text-muted'>Email:</label>
-                      <span className='uk-margin-left uk-text-lead'>
+                      <div className='uk-text-lowercase uk-margin-remove'
+                        style={{ overflowWrap: 'anywhere' }}>
                         {userProfile.data.attributes.mail}
-                      </span>
+                      </div>
                     </div>
-                    <div>
+                    <div className='uk-grid-small uk-margin-small' data-uk-grid>
                       <label className='uk-text-muted'>Phone Nos:</label>
-                      {userProfile.data.attributes.field_phone_nos
-                        && userProfile.data.attributes.field_phone_nos.length > 0 ?
-                        userProfile.data.attributes.field_phone_nos.map((number, index) => {
-                          return (
-                            <span key={index} className='uk-margin-left uk-text-lead'>{number}</span>
-                          )
-                        })
-                        : <span>nil</span>}
+                      <div className='uk-text-capitalize uk-margin-remove'
+                        style={{ overflowWrap: 'anywhere' }}>
+                        {userProfile.data.attributes.field_phone_nos
+                          && userProfile.data.attributes.field_phone_nos.length > 0 ?
+                          userProfile.data.attributes.field_phone_nos.map((number, index) => {
+                            return (
+                              <span key={index}>{number}</span>
+                            )
+                          })
+                          : <span>nil</span>}
+                      </div>
                     </div>
-                    <div>
+                    <div className='uk-grid-small uk-margin-small' data-uk-grid>
                       <label className='uk-text-muted'>Account Status:</label>
-                      {userProfile.data.attributes.status === true ?
-                        <span className='uk-margin-left'>Active</span>
-                        : <span className='uk-margin-left'>New/Inactive</span>}
+                      <div className='uk-text-capitalize uk-margin-remove'
+                        style={{ overflowWrap: 'anywhere' }}>
+                        {userProfile.data.attributes.status === true ?
+                          <span>Active</span>
+                          : <span>New/Inactive</span>}
+                      </div>
                     </div>
                   </div>
                   <div className={'uk-flex uk-flex-center uk-margin uk-grid-small'}

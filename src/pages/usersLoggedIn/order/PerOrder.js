@@ -12,7 +12,7 @@ const PerOrder = (props) => {
   const [orderContent, setOrderContent] = useState();
 
   const alias = 'commerce_order/' + uuid;
-  const aliasExtraSuffix = '?include=order_items.purchased_entity.field_product_images,order_items.purchased_entity.product_variation_type,shipments,shipments.shipping_method,payment_method';
+  const aliasExtraSuffix = '?include=order_items.purchased_entity.field_product_images,shipments.shipping_method,payment_method';
   useEffect(() => {
     let isMounted = true;
     const getOrder = async () => {
@@ -63,13 +63,10 @@ const PerOrder = (props) => {
         orderContent.included.forEach(purchasedItem => {
           if (purchasedItem.type.includes('product-variation--')) {
             if (purchasedItem.id === orderItem.relationships.purchased_entity.data.id) {
-              orderContent.included.forEach(purchasedItemType => {
-                if (purchasedItemType.type === 'product-variation-type') {
-                  if (purchasedItemType.id === purchasedItem.relationships.product_variation_type.data.id) {
-                    itemType = purchasedItemType.attributes.label;
-                  }
-                }
-              });
+              if (purchasedItem.relationships.product_variation_type
+                && purchasedItem.relationships.product_variation_type.data) {
+                itemType = purchasedItem.relationships.product_variation_type.data.meta.drupal_internal__target_id;
+              }
               orderContent.included.forEach(image => {
                 if (image.type === 'file--file') {
                   purchasedItem.relationships.field_product_images.data.forEach(productImage => {
@@ -129,7 +126,7 @@ const PerOrder = (props) => {
                       : 'nil'}
                   </div>
                   <div>
-                    <label style={{ fontSize: 'larger', marginRight: '20px' }}>Order Paid | </label>
+                    <label style={{ fontSize: 'larger', marginRight: '20px' }}>Order Completed | </label>
                     {orderCompleted ?
                       orderCompleted
                       : 'nil'}
@@ -198,7 +195,7 @@ const PerOrder = (props) => {
                                 <div className='uk-text-secondary uk-text-italic'>{item.title.split(' - ')[1]}</div>
                               </td>
                               <td className={'uk-text-center'}>{item.qty}</td>
-                              <td className={'uk-text-center'}>{item.type ? item.type : '-'}</td>
+                              <td className={'uk-text-center uk-text-capitalize'}>{item.type ? item.type : '-'}</td>
                               <td>{item.totalPrice}</td>
                               <td data-uk-lightbox>
                                 {item.images.map((image, imageIndex) => {
@@ -244,14 +241,14 @@ const PerOrder = (props) => {
                         <label style={{ fontSize: 'larger', marginRight: '20px' }}>Total Paid | </label>{orderContent.data.attributes.total_paid
                           && orderContent.data.attributes.total_paid.formatted ?
                           orderContent.data.attributes.total_paid.formatted
-                          : ''}
+                          : 'Pending'}
                       </div>
                     </>
                     : 'nil'}
                 </div>
               </div>
               <div>
-                <label className='uk-heading-bullet uk-text-lead uk-margin-small uk-text-center'>
+                <label className='uk-heading-bullet uk-text-lead uk-margin-small uk-text-center uk-hidden'>
                   Compliant(s) | ---</label>
               </div>
             </div>
@@ -260,5 +257,4 @@ const PerOrder = (props) => {
     </>
   )
 }
-
 export default withRouter(PerOrder)

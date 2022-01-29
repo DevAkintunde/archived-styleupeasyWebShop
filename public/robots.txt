@@ -7,7 +7,7 @@ Disallow: /signed-in/
 Disallow: /cart
 Disallow: /checkout/
 Disallow: /sign-in
-Disallow: /webshop/
+Disallow: /shop/
 # Paths (no clean URLs)
 Disallow: /index.php/search/
 Disallow: /index.php/signed-in
@@ -15,4 +15,4 @@ Disallow: /index.php/signed-in/
 Disallow: /index.php/cart
 Disallow: /index.php/checkout/
 Disallow: /index.php/sign-in
-Disallow: /index.php/webshop/
+Disallow: /index.php/shop/

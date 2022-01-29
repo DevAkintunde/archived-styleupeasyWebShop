@@ -29,23 +29,27 @@ const CheckOutProcessedPayment = ({
                     'Authorization': headerAuthorization,
                 }
             })
-            const outputData = await response.json()
-            setPaymentData(outputData)
+            const outputData = await response.json();
+            setPaymentData(outputData);
             if (outputData.data && outputData.data.attributes &&
                 outputData.data.attributes.state === 'completed') {
                 setCartCountTrigger(Date.now());
             }
-            //console.log(response)
-            //console.log(outputData)
+            //console.log(response);
+            //console.log(outputData);
             if (response.status !== 200) {
-                setServerResponse(response.statusText)
+                setServerResponse(response.statusText);
             }
         }
-        processedPayment()
+        processedPayment();
 
     }, [approvalUrl, headerAuthorization, cartToken,
         triggerStatusRecheck, setCartCountTrigger])
 
+    const triggerRecheck = (e) => {
+        e.target.classList.add('submit-loading');
+        setTriggerStatusRecheck(Date.now());
+    }
     return (
         <>
             {
@@ -65,7 +69,7 @@ const CheckOutProcessedPayment = ({
                                         <FaBan style={{ fontSize: '50' }} className={'uk-text-warning'} />
                                         <p>Oops! We cannot verify your payment status at the moment. Please click <span style={{ fontWeight: 'bold' }}>Check Order Status</span> below to try again.</p>
                                         <button
-                                            onClick={(e) => setTriggerStatusRecheck(Date.now())}
+                                            onClick={triggerRecheck}
                                             className={'uk-button uk-button-secondary'}
                                         >
                                             Check Order Status
@@ -96,7 +100,7 @@ const CheckOutProcessedPayment = ({
                             <>
                                 <div className={'uk-margin'}>{serverResponse}</div>
                                 <button
-                                    onClick={(e) => setTriggerStatusRecheck(Date.now())}
+                                    onClick={triggerRecheck}
                                     className={'uk-button uk-button-secondary'}
                                 >
                                     ReCheck Order Status

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { config } from '../../DrupalUrl';
 import { JwtToken, LoggedStatus } from "../../App";
 import toast, { Toaster } from 'react-hot-toast';
@@ -8,9 +8,7 @@ import Loading from '../../system/Loading';
 import PageTitle from '../../layout/PageTitle';
 import CheckOutProcessor from './CheckOutProcessor';
 
-//const siteUrl = config.url.SITE_URL;
 const siteJsonUrl = config.url.SITE_JSON_URL;
-//const siteJsonEntityUrl = config.url.SITE_ENTITY_ROUTER_URL;
 const CheckOut = (props) => {
   const { jwtTokenBearer } = useContext(JwtToken);
   const { loggedIn } = useContext(LoggedStatus);
@@ -71,7 +69,7 @@ const CheckOut = (props) => {
     };
   }, [alias, headerAuthorization, loggedIn, cartToken])
 
-  //console.log(orderContent);
+  // console.log(orderContent);
   return (
     <>
       <PageTitle title={'Check out'} />
@@ -83,7 +81,19 @@ const CheckOut = (props) => {
             <CheckOutProcessor order={order} />
           </section>
           :
-          <Loading message={"Oops! Can't find anything in your cart."} />
+          <>
+            <Loading message={
+              <>
+                <div className='uk-text-center'>Oops! Can't seem to find anything in your cart.</div>
+                <div className='uk-text-center uk-margin'>
+                  <Link to='/sign-in?destination=/cart'>
+                    <button className='uk-button uk-button-primary uk-margin-large-top'>Sign In</button>
+                  </Link>
+                  <div className='uk-margin-small'> ...to check your saved Cart.</div>
+                </div>
+              </>
+            } />
+          </>
       }
     </>
   )

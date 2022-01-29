@@ -16,12 +16,12 @@ const OrdersPage = () => {
   let allOrders = [];
   orderContents && orderContents.current && orderContents.current.data && orderContents.current.data.forEach((order) => {
     orderContents.current.included.forEach((orderItem) => {
-      if (orderItem.type.includes('order-item')) {
+      if (orderItem.type.includes('order-item--')) {
         if (order.id === orderItem.relationships.order_id.data.id) {
-          let imgUrl = ''
+          let imgUrl = '';
           let itemTotalPaid = 0;
           const orderUuid = order.id;
-          let orderCompleted = ''
+          let orderCompleted = '';
           if (order.attributes.total_paid && order.attributes.total_paid.formatted) {
             itemTotalPaid = order.attributes.total_paid.formatted;
           }
@@ -50,9 +50,18 @@ const OrdersPage = () => {
             'title': itemTitle,
             'price': itemTotalPaid,
             'uuid': orderUuid,
-            'date': orderCompleted
+            'date': orderCompleted,
+            'multiItems': 0
           }
-          allOrders.push(eachOrder);
+          if (allOrders.some(thisUuid => thisUuid.uuid === eachOrder.uuid)) {
+            allOrders.forEach((thisOrder) => {
+              if (thisOrder.uuid === eachOrder.uuid) {
+                thisOrder.multiItems++;
+              }
+            });
+          } else {
+            allOrders.push(eachOrder);
+          }
         }
       }
     })
@@ -77,15 +86,16 @@ const OrdersPage = () => {
         {
           allOrders ?
             <>
-              <div className='uk-child-width-1-2 uk-child-width-1-3@m' data-uk-grid>
+              <div className='uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-flex uk-flex-center'
+                data-uk-grid>
                 {allOrders && allOrders.length > 0 ?
                   <>
                     {allOrders && allOrders.map((order, index) => {
                       return (
                         order ?
-                          <Fragment key={index} >
+                          <div key={index} style={{ maxWidth: '300px' }}>
                             <OrderTeaser order={order} />
-                          </Fragment>
+                          </div>
                           : <div className={'uk-width-1-1'}><Loading /></div>
                       )
                     })}

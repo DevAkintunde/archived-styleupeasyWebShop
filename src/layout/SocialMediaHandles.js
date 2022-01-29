@@ -82,7 +82,10 @@ const SocialMediaHandles = ({
             style={{ fontSize: 'larger' }}
             onClick={fireInCartButton}>
             <FaShoppingBag />
-            <span style={{ fontSize: '15px', verticalAlign: 'sub' }}>{cartCount}</span>
+            <span className='cart-counter'
+              style={{ fontSize: '15px', verticalAlign: 'sub' }}>
+              {cartCount}
+            </span>
           </Link>
           {loggedIn ?
             <LoggedInNavigation />

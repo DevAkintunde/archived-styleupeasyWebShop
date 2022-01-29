@@ -356,8 +356,8 @@ const RegisterForm = () => {
                         </>
                     </form>
                     {asyncLoadingBoolean ?
-                        <div className={'uk-overlay uk-overlay-primary uk-position-cover'}>
-                            <Loading
+                        <div className={'uk-overlay uk-overlay-default uk-position-cover'}>
+                            <Loading message='Please hold on, we are processing your registration'
                                 styling='uk-position-center'
                             /></div> : ''}
                 </div>

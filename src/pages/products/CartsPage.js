@@ -26,7 +26,7 @@ const CartsPage = () => {
 	if (!jwtTokenBearer) {
 		headerAuthorization = '';
 	}
-	const alias = 'carts?include=order_items.purchased_entity,order_items.purchased_entity.field_product_images';
+	const alias = 'carts?include=order_items.purchased_entity,order_items.purchased_entity.field_product_images,order_items.purchased_entity.product_id';
 
 	useEffect(() => {
 		let isMounted = true;
@@ -42,8 +42,8 @@ const CartsPage = () => {
 			})
 			const outputData = await response.json();
 
-			//console.log(response);
-			//console.log(outputData);
+			// console.log(response);
+			// console.log(outputData);
 			let allOrderCarts = [];
 			outputData && outputData.data && outputData.data.forEach((order) => {
 				let items = [];
@@ -56,17 +56,23 @@ const CartsPage = () => {
 									if (itemPurchased.id === orderItem.relationships.purchased_entity.data.id) {
 
 										let itemImageFile = '';
+										let productUrl = '';
 										outputData && outputData.included.forEach((itemImage) => {
 											if (itemImage.type.includes('file--file')) {
 												if (itemImage.id === itemPurchased.relationships.field_product_images.data[0].id) {
 													itemImageFile = itemImage.attributes.image_style_uri.thumbnail;
 
 												}
+											} else if (itemImage.type.includes('product--')) {
+												if (itemImage.id === itemPurchased.relationships.product_id.data.id) {
+													productUrl = itemImage.attributes.path.alias + '/' + itemPurchased.id;
+												}
 											}
-										})
+										});
 										const itemProps = {
 											'purchased': itemPurchased,
-											'image': itemImageFile
+											'image': itemImageFile,
+											'product_url': productUrl
 										};
 										itemOrderProps = itemProps;
 									}
@@ -102,6 +108,7 @@ const CartsPage = () => {
 	const triggerRerenderCartPage = () => {
 		setRerenderCartPage(Date.now());
 	}
+	// console.log(cartItems)
 
 	return (
 		<>
@@ -148,7 +155,7 @@ const CartsPage = () => {
 												<div className='uk-card-body uk-padding-small'
 													style={{ backgroundColor: Number.isInteger(index / 2) ? '#ba6b5708' : '#64ba5708' }}
 												>
-													<div className='uk-text-center uk-text-lead'>{index}</div>
+													<div className='uk-text-center uk-text-lead'>Cart {index + 1}</div>
 													<Cart
 														cartItem={cartItem}
 														headerAuthorization={headerAuthorization}
@@ -172,7 +179,7 @@ const CartsPage = () => {
 							)
 						})
 						:
-						<Loading message="Seems you haven't added anything to a cart yet" />
+						<Loading message="Seems you haven't added anything to cart yet" />
 					}
 				</div>
 			</div>

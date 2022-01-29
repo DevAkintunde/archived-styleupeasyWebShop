@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { config } from '../../DrupalUrl';
 //import { JwtToken, LoggedStatus } from "../../App";
 import toast, { Toaster } from 'react-hot-toast';
@@ -73,7 +73,15 @@ const Cart = ({
 			}
 		}
 		if (updateTotal === true) {
-			const thisRow = e.target.parentNode.parentNode.childNodes
+			//realtime counter
+			const cartCounter = document.querySelectorAll('.cart-counter');
+			if (cartCounter.length > 0) {
+				cartCounter.forEach((thisCounter) => {
+					thisCounter.innerText = (thisCounter.innerText * 1) + 1;
+				});
+			}
+
+			const thisRow = e.target.parentNode.parentNode.childNodes;
 			for (let k = 0; k < thisRow.length; k++) {
 				const thisCol = thisRow[k];
 
@@ -158,6 +166,14 @@ const Cart = ({
 			}
 		}
 		if (updateTotal === true) {
+			//realtime counter
+			const cartCounter = document.querySelectorAll('.cart-counter');
+			if (cartCounter.length > 0) {
+				cartCounter.forEach((thisCounter) => {
+					thisCounter.innerText = (thisCounter.innerText * 1) - 1;
+				});
+			}
+
 			const thisRow = e.target.parentNode.parentNode.childNodes;
 			for (let k = 0; k < thisRow.length; k++) {
 				const thisCol = thisRow[k];
@@ -208,7 +224,6 @@ const Cart = ({
 	const removeItem = (e) => {
 		e.preventDefault();
 		const itemRow = e.target.parentNode.parentNode;
-		// console.log(e);
 		e.target.classList.add('submit-loading');
 		const identifier = e.target.id;
 		const identifierProps = identifier.split('/');
@@ -233,7 +248,58 @@ const Cart = ({
 				})
 			});
 			if (response.status === 204) {
-				itemRow.remove();
+				//deduct from cart counter
+				const cartCounter = document.querySelectorAll('.cart-counter');
+				if (cartCounter.length > 0) {
+					itemRow.childNodes.forEach((data) => {
+						if (data.id === 'quantity-input-group') {
+							const qtyGroup = data.childNodes;
+							qtyGroup.forEach((input) => {
+								if (input.id === 'quantity-input') {
+									cartCounter.forEach((thisCounter) => {
+										thisCounter.innerText = (thisCounter.innerText * 1) - (input.value * 1);
+										// Remove row from list.
+										itemRow.remove();
+										// Adjust subtotal as relevant
+										const thisTableBody = document.getElementById('cart-layout-body');
+										const thisTableRows = thisTableBody.childNodes;
+										let subTotal = '';
+										for (let l = 0; l < thisTableRows.length; l++) {
+											const tableRow = thisTableRows[l];
+											const tableRowChild = tableRow.childNodes;
+											let unitPrice = '';
+											let itemQuantity = '';
+											for (let m = 0; m < tableRowChild.length; m++) {
+												const tableChildCol = tableRowChild[m];
+												if (tableChildCol.id === 'priceRow') {
+													unitPrice = tableChildCol.childNodes[1].id * 1;
+												}
+												if (tableChildCol.id === 'quantity-input-group') {
+													itemQuantity = tableChildCol.childNodes[1].value * 1;
+												}
+											}
+											if (unitPrice && itemQuantity) {
+												subTotal = Number(subTotal) + (unitPrice * itemQuantity);
+											}
+										}
+										const thisFooter = thisTableBody.parentNode.childNodes;
+										const subTotalInFooter = thisFooter[1].childNodes[0].childNodes;
+										if (subTotal) {
+											for (let n = 0; n < subTotalInFooter.length; n++) {
+												const footerCol = subTotalInFooter[n];
+												if (footerCol.id === 'subTotalPrice') {
+													const formattedSubTotal = new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(subTotal);
+													footerCol.textContent = formattedSubTotal;
+												}
+											}
+										}
+									});
+								}
+							})
+						}
+					})
+				}
+
 				toast("Item removed from cart");
 				const cartPane = document.getElementById(cartToProcess);
 				const cartItemRows = cartPane.childNodes[0].childNodes;
@@ -367,9 +433,13 @@ const Cart = ({
 									return (
 										<tr key={purchasedItem.itemProps.purchased.id}
 											id={purchasedItem.item.id + '/' + purchasedItem.item.type}>
-											<td>{index + 1}</td>
+											{cartItem.items.length > 1 ?
+												<td>{index + 1}</td>
+												: null}
 											<td>
-												<img src={purchasedItem.itemProps.image} alt={purchasedItem.item.attributes.title} />
+												<Link to={purchasedItem.itemProps.product_url}>
+													<img src={purchasedItem.itemProps.image} alt={purchasedItem.item.attributes.title} />
+												</Link>
 											</td>
 											<td className='uk-visible@s'>
 												{purchasedItem.item.attributes.title.split(' - ')[0]}
@@ -391,7 +461,9 @@ const Cart = ({
 														padding: '0 15px',
 														marginBottom: '3px',
 														border: 'none',
-														fontWeight: 'bold'
+														fontWeight: 'bold',
+														display: 'block',
+														margin: 'auto'
 													}}
 												/>
 												<input
@@ -405,6 +477,10 @@ const Cart = ({
 													step='1'
 													id='quantity-input'
 													className={'remove-input-number-spin-button'}
+													style={{
+														display: 'block',
+														margin: 'auto'
+													}}
 													required
 													disabled
 												/>
@@ -419,7 +495,9 @@ const Cart = ({
 														padding: '0 15px',
 														marginTop: '3px',
 														border: 'none',
-														fontWeight: 'bold'
+														fontWeight: 'bold',
+														display: 'block',
+														margin: 'auto'
 													}}
 												/>
 												<div>
@@ -463,7 +541,11 @@ const Cart = ({
 						</tbody>
 						<tfoot>
 							<tr className='uk-text-center'>
-								<td></td><td></td><td></td><td></td>
+								{cartItem && cartItem.items &&
+									cartItem.items.length > 1 ?
+									<td></td>
+									: null}
+								<td></td><td></td>
 								<td>
 									SubTotal
 								</td>
@@ -494,7 +576,7 @@ const Cart = ({
 							type='button'
 							onClick={checkOut}
 							value='Check Out'
-							className={toCheckout === true ? 'uk-button loading' : 'uk-button uk-button-primary'}
+							className={toCheckout === true ? 'uk-button submit-loading' : 'uk-button uk-button-primary'}
 							disabled={toCheckout === true ? true : false}
 						/>
 					</span>

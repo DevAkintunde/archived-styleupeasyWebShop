@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext } from 'react'
-//import Loading from '../../system/Loading'
+import { useState, useEffect, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { config } from '../../DrupalUrl';
 import { JwtToken, LoggedStatus } from "../../App";
 import toast, { Toaster } from 'react-hot-toast';
@@ -11,14 +11,14 @@ import CheckOutReview from './CheckOutReview';
 import { Link } from 'react-router-dom';
 import CheckOutShipmentOptions from './CheckOutShipmentOptions';
 import { FaAngleDoubleDown, FaBackspace } from 'react-icons/fa';
+import Loading from '../../system/Loading';
 
-//const siteUrl = config.url.SITE_URL;
 const siteJsonUrl = config.url.SITE_JSON_URL;
-//const siteJsonEntityUrl = config.url.SITE_ENTITY_ROUTER_URL;
 const CheckOutProcessor = (props) => {
-    const { jwtTokenBearer } = useContext(JwtToken)
-    const { loggedIn } = useContext(LoggedStatus)
-    const [orderState, setOrderState] = useState()
+    const { jwtTokenBearer } = useContext(JwtToken);
+    const { loggedIn } = useContext(LoggedStatus);
+    const [orderState, setOrderState] = useState();
+    const location = useLocation();
 
     const [step, setStep] = useState();
     useEffect(() => {
@@ -102,53 +102,58 @@ const CheckOutProcessor = (props) => {
     const [emailInputError, setEmailInputError] = useState(false);
     const continueByEmail = ((e) => {
         e.preventDefault()
-        //console.log(formData.email)
         if (!validator.isEmail(emailAddress)) {
             setEmailInputError(true);
         } else {
             setEmailInputError(false)
             formData['email'] = emailAddress;
-            setStep('paymentOption');
+            setStep('shippingDestination');
         }
     })
-    //console.log(formData);
 
     const cartToken = localStorage.getItem('cartToken');
     const headerAuthorization = 'Bearer ' + jwtTokenBearer;
     const order = props.order;
-    const alias = 'checkout/' + order;
+    let alias = '';
+    if (order) {
+        alias = 'checkout/' + order;
+    }
     //use to control rerendering on useEffects
     //to caution formData rerender
     const [singlerenderer, setSingleRenderer] = useState(false);
     useEffect(() => {
         let isMounted = true;
-        if (cartToken || loggedIn) {
-            const getOrderContent = async () => {
-                const response = await fetch(siteJsonUrl + alias + '?include=order_items,order_items.purchased_entity,order_items.purchased_entity.field_product_images', {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/vnd.api+json',
-                        'Content-type': 'application/vnd.api+json',
-                        'Commerce-Cart-Token': cartToken,
-                        'Authorization': headerAuthorization,
-                    }
-                })
-                const outputData = await response.json();
-                //console.log(response);
-                //console.log(outputData);
-                if (isMounted) {
-                    if (response.status === 500) {
-                        toast('Oops! Seems your order cannot be found. Please send us an email if you have further troubles');
-                    }
+
+        const getOrderContent = async () => {
+            const response = await fetch(siteJsonUrl + alias + '?include=order_items,order_items.purchased_entity,order_items.purchased_entity.field_product_images', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-type': 'application/vnd.api+json',
+                    'Commerce-Cart-Token': cartToken,
+                    'Authorization': headerAuthorization,
+                }
+            })
+            const outputData = await response.json();
+            // console.log(response);
+            // console.log(outputData);
+            if (isMounted) {
+                if (response.status === 500) {
+                    toast('Oops! Seems your order cannot be found. Please send us an email using any of our contact links if you have further troubles');
+                }
+                if (outputData && outputData.data) {
+                    setOrderState(outputData.data.attributes.state);
                     setOrderRawData(outputData);
-                    if (outputData && outputData.data) {
+                    if (outputData.data.attributes.state !== 'completed') {
                         setOrderType(outputData.data.type);
-                        setOrderState(outputData.data.attributes.state);
-                        if (outputData.data.attributes.state !== 'completed') {
-                            setProcessPatch(true);
-                        }
+                        setProcessPatch(true);
+
                         if (outputData.data.attributes.email) {
-                            setEmailAddress(outputData.data.attributes.email);
+                            if (loggedIn) {
+                                formData['email'] = outputData.data.attributes.email;
+                            } else {
+                                setEmailAddress(outputData.data.attributes.email);
+                            }
                         }
                         if (outputData.data.attributes.payment_instrument &&
                             outputData.data.attributes.payment_instrument.payment_gateway_id) {
@@ -166,61 +171,29 @@ const CheckOutProcessor = (props) => {
                             formData['firstName'] = orderPreAddress.given_name;
                             formData['contactNo'] = outputData.data.attributes.shipping_information.field_customer_phone_number;
                         }
+                    } else {
+                        setStep('review');
                     }
-                    setPatchUrl(siteJsonUrl + alias);
                 }
-                return () => {
-                    isMounted = false;
-                };
+                setPatchUrl(siteJsonUrl + alias);
             }
-            if (!singlerenderer) {
-                getOrderContent();
-                setSingleRenderer(true);
-            }
+            return () => {
+                isMounted = false;
+            };
+        }
+        if (!singlerenderer && alias && (cartToken || loggedIn)) {
+            getOrderContent();
+            setSingleRenderer(true);
         }
     }, [cartToken, headerAuthorization, alias, loggedIn,
         formData, singlerenderer]);
 
-    //console.log(processPatch);
+    // console.log(patchUrl);
     // console.log(formData);
     const [reservedPaymentList, setReservedPaymentList] = useState();
+    const [reservedShipmentList, setReservedShipmentList] = useState();
 
     switch (step) {
-        case 'paymentOption':
-            return (
-                <>
-                    <section
-                        className='uk-article-title uk-text-center'>
-                        Payment Option
-                    </section>
-                    <div
-                        className='uk-margin-remove-top uk-margin uk-flex uk-flex-center uk-position-relative'>
-                        <div
-                            className='checkout-paymentoptions uk-card uk-card-body uk-card-default uk-width-large uk-width-1-1 uk-text-center'
-                        >
-                            <CheckOutPaymentOption
-                                nextStep={shippingDestinationStep}
-                                previousStep={anonymousEmail}
-                                handleFormData={handleInputData}
-                                values={formData}
-                                patchUrl={patchUrl}
-                                processPatch={processPatch}
-                                headerAuthorization={headerAuthorization}
-                                cartToken={cartToken}
-                                order={order}
-                                orderType={orderType}
-                                reservedPaymentList={reservedPaymentList}
-                                setReservedPaymentList={setReservedPaymentList}
-                            />
-                            <div className='uk-text-center'>
-                                <Link to='/cart' className={'uk-button uk-button-default'}>
-                                    Return To Cart
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            );
         case 'shippingDestination':
             return (
                 <>
@@ -234,8 +207,8 @@ const CheckOutProcessor = (props) => {
                             className='uk-card uk-card-body uk-card-default uk-width-large uk-width-1-1'
                         >
                             <CheckOutShippingDestination
-                                nextStep={shipmentOptionsStep}
-                                previousStep={paymentOptionStep}
+                                nextStep={paymentOptionStep}
+                                previousStep={anonymousEmail}
                                 handleFormData={handleInputData}
                                 values={formData}
                                 patchUrl={patchUrl}
@@ -244,6 +217,41 @@ const CheckOutProcessor = (props) => {
                                 cartToken={cartToken}
                                 order={order}
                                 orderType={orderType}
+                            />
+                            <div className='uk-text-center'>
+                                <Link to='/cart' className={'uk-button uk-button-default'}>
+                                    Return To Cart
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        case 'paymentOption':
+            return (
+                <>
+                    <section
+                        className='uk-article-title uk-text-center'>
+                        Payment Option
+                    </section>
+                    <div
+                        className='uk-margin-remove-top uk-margin uk-flex uk-flex-center uk-position-relative'>
+                        <div
+                            className='checkout-paymentoptions uk-card uk-card-body uk-card-default uk-width-large uk-width-1-1 uk-text-center'
+                        >
+                            <CheckOutPaymentOption
+                                nextStep={shipmentOptionsStep}
+                                previousStep={shippingDestinationStep}
+                                handleFormData={handleInputData}
+                                values={formData}
+                                patchUrl={patchUrl}
+                                processPatch={processPatch}
+                                headerAuthorization={headerAuthorization}
+                                cartToken={cartToken}
+                                order={order}
+                                orderType={orderType}
+                                reservedPaymentList={reservedPaymentList}
+                                setReservedPaymentList={setReservedPaymentList}
                             />
                             <div className='uk-text-center'>
                                 <Link to='/cart' className={'uk-button uk-button-default'}>
@@ -268,7 +276,7 @@ const CheckOutProcessor = (props) => {
                         >
                             <CheckOutShipmentOptions
                                 nextStep={reviewStep}
-                                previousStep={shippingDestinationStep}
+                                previousStep={paymentOptionStep}
                                 handleFormData={handleInputData}
                                 values={formData}
                                 patchUrl={patchUrl}
@@ -277,6 +285,8 @@ const CheckOutProcessor = (props) => {
                                 cartToken={cartToken}
                                 order={order}
                                 orderType={orderType}
+                                reservedShipmentList={reservedShipmentList}
+                                setReservedShipmentList={setReservedShipmentList}
                             />
                             <div className='uk-text-center'>
                                 <Link to='/cart' className={'uk-button uk-button-default'}>
@@ -293,7 +303,7 @@ const CheckOutProcessor = (props) => {
                     <section
                         className='uk-article-title uk-text-center'>
                         {orderState === 'completed' ?
-                            'Order Processed'
+                            'Order'
                             : 'Review Order'
                         }
                     </section>
@@ -314,15 +324,6 @@ const CheckOutProcessor = (props) => {
                                 orderType={orderType}
                                 orderRawData={orderRawData}
                             />
-                            <div className='uk-text-center'>
-                                {
-                                    orderState === 'completed' ?
-                                        <Link to='/in-stock' className={'uk-button uk-button-default'}>
-                                            Keep Shopping
-                                        </Link>
-                                        : ''
-                                }
-                            </div>
                         </div>
                     </div>
                 </>
@@ -332,7 +333,7 @@ const CheckOutProcessor = (props) => {
                 loggedIn !== true ?
                     <div
                         className='uk-position-relative uk-padding-small'>
-                        <LoginForm />
+                        <LoginForm destination={location.pathname} />
                         <div className='uk-text-center uk-position-bottom-center'
                             style={{ bottom: '20px' }}>
                             <button
@@ -350,8 +351,8 @@ const CheckOutProcessor = (props) => {
             return (
                 <>
                     <Toaster />
-                    {
-                        loggedIn === true ?
+                    {orderState && orderState !== 'completed' ?
+                        loggedIn ?
                             setStep('paymentOption')
                             :
                             <>
@@ -421,10 +422,9 @@ const CheckOutProcessor = (props) => {
                                     </div>
                                 </div>
                             </>
-                    }
+                        : <Loading />}
                 </>
             );
     }
 }
-
 export default CheckOutProcessor

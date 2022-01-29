@@ -126,7 +126,7 @@ const ProductTeaserVariation = (props) => {
               className={'uk-overlay uk-overlay-default uk-position-bottom'}
               style={{
                 fontWeight: 'bold', textAlign: 'center',
-                fontSize: '1.5em', lineHeight: '.5'
+                fontSize: '1.5em', lineHeight: '.5', padding: '15px'
               }}>
               {entity.data.attributes && entity.data.attributes.resolved_price ?
                 entity.data.attributes.resolved_price.formatted : ''}

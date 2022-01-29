@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { JwtToken } from "../App";
 import validator from "validator";
+import UIkit from "uikit";
+// import { PagerFilter } from ".Pager";
 
 const Pager = ({
   pageContents, url, reset, pagination
@@ -187,20 +189,20 @@ const Pager = ({
     if (pageContentsRenderer !== pageContent) {
       if (pageContent && pageContent.current) {
         pageContents(pageContent);
+        window.scrollTo({
+          top: 250,
+          left: 0,
+          behavior: 'smooth'
+        });
       } else {
         pageContents();
       }
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
-      });
-      // let getPageTitleById = document.getElementById('pageTitle');
-      // if (getPageTitleById && pageContent.previous) {
+      // let getPageTitleById = document.querySelector('#pageTitle');
+      // if (getPageTitleById) {
+      //   console.log('getPageTitleById')
       //   getPageTitleById.scrollIntoView({
       //     behavior: 'smooth',
-      //     block: 'start',
-      //     inline: 'start'
+      //     block: 'start'
       //   });
       // };
       // console.log(getPageTitleById)
@@ -215,6 +217,13 @@ const Pager = ({
   const pageCountController = (e) => {
     const numberValue = e.target.value;
     if (validator.isInt(numberValue, { min: 2, max: 20 })) {
+      const filterTable = document.querySelector('#page-filter-container-top tbody');
+      if (filterTable) {
+        const filterTableInput = filterTable.querySelector('#' + e.target.id);
+        if (filterTableInput) {
+          filterTableInput.value = numberValue;
+        }
+      }
       setPageCounter(numberValue * 1);
       setNumberFilterError(false);
     } else {
@@ -233,70 +242,95 @@ const Pager = ({
         setPagerer({ 'direction': '+', 'trigger': '' });
         setFirstPagerFetch(true);
         SetFilterUpdateTrigger(Date.now());
+
+        document.querySelector('#pager-filter').value = pageCounter;
+        const filterForm = document.querySelector('#page-filter-container');
+        if (filterForm) {
+          UIkit.accordion(filterForm).toggle();
+        }
+      } else if (!pageCounter) {
+        const filterValueContainer = document.querySelector('#pager-filter');
+        if (filterValueContainer && filterValueContainer.value
+          && filterValueContainer.value !== perPageCount) {
+          reset();
+          setPerPageCount(filterValueContainer.value);
+          setOffset({ 'number': 0, 'direction': 'next' });
+          setPagerer({ 'direction': '+', 'trigger': '' });
+          setFirstPagerFetch(true);
+          SetFilterUpdateTrigger(Date.now());
+        }
       }
       window.scrollTo({
         top: 250,
         left: 0,
         behavior: 'smooth'
       });
-      e.target.parentNode.classList.add('uk-hidden');
-      document.querySelector('#pager-filter').value = pageCounter;
     }
   }
-  const filtersVisibility = (e) => {
-    const filterForm = e.target.parentNode.parentNode.childNodes[0];
-    if (filterForm.classList.contains('uk-hidden')) {
-      filterForm.classList.remove('uk-hidden');
-      e.target.value = '˅';
-    } else {
-      filterForm.classList.add('uk-hidden');
-      e.target.value = '^';
+  const filtersVisibility = () => {
+    const filterForm = document.querySelector('#page-filter-container');
+    if (filterForm) {
+      UIkit.accordion(filterForm).toggle(0, true);
     }
   }
   //console.log(pageContent.current)
   return (
     pageContent && pageContent.current ?
       <div
-        className={'uk-width-1-1 uk-margin-large-top uk-text-center'}
-        style={{ position: 'sticky', bottom: '7px' }}
+        className={'uk-width-1-1 uk-margin-large-top'}
       >
-        <div id='page-filter-container' className={'uk-hidden'}>
-          <form
-            onSubmit={submitFilters}
-            id='page-filter'
-            className={'uk-card-body uk-card-primary-light uk-position-bottom-center uk-margin-large-bottom'}
-          >
-            <div className={'uk-card-body uk-card-default'} >
-              <div>
-                <div className={'form-item'}>
-                  <label className={'uk-margin-right'}
-                    htmlFor={'pager-filter'}
-                  >Item per page</label>
-                  <input
-                    type='number'
-                    min={2}
-                    max={20}
-                    defaultValue={perPageCount}
-                    id={'pager-filter'}
-                    onChange={pageCountController}
-                  />
-                </div>
-                <div>
-                  {numberFilterError === true ?
-                    'Try > 1, < 20'
-                    : ''}
-                </div>
+        <ul id='page-filter-container' className='uk-padding-remove'
+          data-uk-accordion>
+          <li style={{ listStyle: 'none' }}>
+            <form
+              onSubmit={submitFilters}
+              id='page-filter-form'
+              className={'uk-card-body uk-padding-small uk-accordion-content'}
+              style={{
+                backgroundColor: '#9b5e4fbf', color: '#fff',
+                maxWidth: '480px', margin: 'auto'
+              }}
+            >
+              <div className={'uk-overflow-auto'}>
+                <table
+                  id='filter-table'
+                  className='uk-table uk-table-divider uk-table-small uk-table-middle uk-table-striped'
+                >
+                  <tbody>
+                    <tr>
+                      <td className=''
+                        htmlFor={'pager-filter'} >Item per page</td>
+                      <td>
+                        <input
+                          type='number'
+                          min={2}
+                          max={20}
+                          step={1}
+                          defaultValue={perPageCount}
+                          id={'pager-filter'}
+                          onChange={pageCountController}
+                        />
+                        <div>
+                          {numberFilterError === true ?
+                            'Try > 1, < 20'
+                            : ''}
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <input
-                type='submit'
-                value='Filter'
-                className={'uk-button uk-margin-top'}
-              />
-              <button className={'uk-modal-close-default'}
-                data-uk-close></button>
-            </div>
-          </form>
-        </div>
+              <div className='uk-text-center'>
+                <input
+                  id='filterSubmit'
+                  type='submit'
+                  value='Filter'
+                  className={'uk-button uk-button-secondary uk-margin-top'}
+                />
+              </div>
+            </form>
+          </li>
+        </ul >
         <nav className={'uk-flex uk-flex-center'}
           style={{ maxWidth: '720px', margin: 'auto' }}
         >
@@ -304,10 +338,10 @@ const Pager = ({
             type='button'
             value={'^'}
             onClick={filtersVisibility}
-            className={'uk-button uk-text-lowercase'}
+            className={'uk-button uk-text-lowercase '}
             style={{
               borderRadius: '25px', padding: '0 10px',
-              marginLeft: '-58px', marginRight: '20px'
+              marginLeft: '-50px', marginRight: '20px'
             }}
           />
           <section>
@@ -333,9 +367,105 @@ const Pager = ({
             />
           </section>
         </nav>
-      </div>
+      </div >
       : ''
   )
 }
-
 export default Pager
+export const PagerFilter = () => {
+  const [numberFilterError, setNumberFilterError] = useState(false);
+  const submitFilters = (e) => {
+    e.preventDefault();
+    const pagerSubmit = document.querySelector('#filterSubmit');
+    if (pagerSubmit) {
+      pagerSubmit.click()
+    }
+    if (!numberFilterError) {
+      const filterForm = document.querySelector('#page-filter-container-top');
+      if (filterForm) {
+        UIkit.accordion(filterForm).toggle();
+      }
+      const filterFormMain = document.querySelector('#page-filter-container');
+      if (filterFormMain) {
+        UIkit.accordion(filterFormMain).toggle();
+      }
+    }
+  }
+  const filterChange = (e) => {
+    const numberValue = e.target.value;
+    if (validator.isInt(numberValue, { min: 2, max: 20 })) {
+      const filterTable = document.querySelector('#page-filter-container tbody');
+      if (filterTable) {
+        const filterTableInput = filterTable.querySelector('#' + e.target.id);
+        if (filterTableInput) {
+          filterTableInput.value = numberValue;
+        }
+      }
+      setNumberFilterError(false);
+    } else {
+      setNumberFilterError(true);
+    }
+  }
+
+  return (
+    <>
+      <ul id='page-filter-container-top' className='uk-padding-remove'
+        data-uk-accordion>
+        <li style={{ listStyle: 'none' }}>
+          <div
+            style={{ cursor: 'pointer' }}
+            className='uk-accordion-title uk-text-center uk-background-primary-light'>
+            Filter
+          </div>
+          <form
+            onSubmit={submitFilters}
+            id='page-filter-form-top'
+            className={'uk-card-body uk-padding-small uk-accordion-content'}
+            style={{
+              backgroundColor: '#9b5e4fbf', color: '#fff',
+              maxWidth: '480px', margin: 'auto'
+            }}
+          >
+            <div>
+              <table
+                id='filter-table-top'
+                className='uk-table uk-table-divider uk-table-small uk-table-middle uk-table-striped'
+              >
+                <tbody>
+                  <tr>
+                    <td className=''
+                      htmlFor={'pager-filter'} >Item per page</td>
+                    <td>
+                      <input
+                        type='number'
+                        min={2}
+                        max={20}
+                        step={1}
+                        defaultValue={document.getElementById('pager-filter') ?
+                          document.getElementById('pager-filter').value : '2'}
+                        id={'pager-filter'}
+                        onChange={filterChange}
+                      />
+                      <div>
+                        {numberFilterError === true ?
+                          'Try > 1, < 20'
+                          : ''}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className='uk-text-center'>
+              <input
+                type='submit'
+                value='Filter'
+                className={'uk-button uk-button-secondary uk-margin-top'}
+              />
+            </div>
+          </form>
+        </li>
+      </ul >
+    </>
+  )
+}

@@ -122,6 +122,7 @@ const AddToCart = (props) => {
 	//console.log(qtyInput + ' < ' + stock)
 	const onAddToCart = (e) => {
 		e.preventDefault();
+		let isMounted = true;
 		e.target.value = 'added';
 		e.target.disabled = true;
 		setTimeout(() => {
@@ -131,6 +132,12 @@ const AddToCart = (props) => {
 
 		if ((loggedIn || cartToken) && qtyInput
 			&& (qtyInput > 0) && stock > 0) {
+			const cartCounter = document.querySelectorAll('.cart-counter');
+			if (cartCounter.length > 0) {
+				cartCounter.forEach((thisCounter) => {
+					thisCounter.innerText = (thisCounter.innerText * 1) + qtyInput;
+				});
+			}
 			fetch(siteJsonUrl + 'cart/add', {
 				method: 'POST',
 				headers: {
@@ -148,11 +155,12 @@ const AddToCart = (props) => {
 						},
 					}],
 				}),
-
 			}).then((res) => {
 				if (res && res.status === 200) {
 					//toast('Item is added to cart');
-					setStock(previous => previous - qtyInput);
+					if (isMounted) {
+						setStock(previous => previous - qtyInput);
+					}
 					setCartCountTrigger(Date.now());
 				} else {
 					//toast('There was a problem adding item to cart');
@@ -162,6 +170,7 @@ const AddToCart = (props) => {
 			//toast('There was a problem adding item to cart');
 		}
 	}
+
 	return (
 		<>
 			<form>
@@ -178,7 +187,8 @@ const AddToCart = (props) => {
 									: '',
 								fontSize: '20px',
 								padding: '0px 15px', marginRight: '5px',
-								border: 'none', fontWeight: 'bold'
+								border: 'none', fontWeight: 'bold',
+								backgroundColor: qtyInput > 1 ? '' : '#fff'
 							}}
 							disabled={stock > 0 ?
 								qtyInput > 1 ? false : true
@@ -207,7 +217,8 @@ const AddToCart = (props) => {
 									: '',
 								fontSize: '20px',
 								padding: '0px 15px', marginLeft: '5px',
-								border: 'none', fontWeight: 'bold'
+								border: 'none', fontWeight: 'bold',
+								backgroundColor: qtyInput < stock ? '' : '#fff'
 							}}
 							disabled={stock > 0 ?
 								qtyInput < stock ? false : true
@@ -217,7 +228,8 @@ const AddToCart = (props) => {
 					<div>
 						<input
 							type='submit'
-							className='uk-button uk-text-capitalize'
+							className='uk-button uk-button-primary uk-text-capitalize'
+							style={{ borderRadius: '5px' }}
 							value={stock > 0 ? 'Add To Cart' : 'Out of Stock'}
 							disabled={stock > 0 ? false : true}
 							onClick={onAddToCart}

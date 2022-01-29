@@ -6,7 +6,8 @@ import { config } from '../../DrupalUrl';
 import PageTitle from '../../layout/PageTitle';
 import ProductVariation from './ProductVariation';
 import AddToCart from './AddToCart';
-import { FaTag } from 'react-icons/fa';
+import { FaShareSquare, FaTag } from 'react-icons/fa';
+import QRCode from 'react-qr-code';
 
 const siteUrl = config.url.SITE_URL;
 const frontendUrl = config.url.APP_URL;
@@ -64,6 +65,10 @@ const ProductItem = (props) => {
     };
   }, [props])
 
+  // useEffect(() => {
+  //   setCurrentVariation('');
+  // }, [props.location.key])
+  // console.log(props)
   useEffect(() => {
     let isMounted = true;
     const getProductUuid = async () => {
@@ -316,7 +321,10 @@ const ProductItem = (props) => {
                   <span>
                     <div id={colourColorCode + '&' + colourColorOpacity}>
                       <div
-                        style={{ backgroundColor: colourColorCode, opacity: colourColorOpacity !== null ? colourColorOpacity : '' }}
+                        style={{
+                          backgroundColor: colourColorCode,
+                          opacity: colourColorOpacity !== null ? colourColorOpacity : ''
+                        }}
                         className='attribute-color-swatch'
                         id={'active-attribute-colour'}
                       ></div>
@@ -737,6 +745,10 @@ const ProductItem = (props) => {
               <div dangerouslySetInnerHTML={{ __html: productContent.data.attributes.body.processed }}>
               </div>
             </div>
+            <div className='uk-text-center uk-margin-bottom uk-hidden@s'>
+              <QRCode value={frontendUrl + aliasExt} level='L' size={100} />
+              <div>Scan to share <span><FaShareSquare /></span></div>
+            </div>
 
             <div className='uk-flex uk-flex-center'>
               <FaTag className={'uk-margin-right'} />
@@ -768,80 +780,90 @@ const ProductItem = (props) => {
             <div className='uk-margin-top'
               style={{ position: 'sticky', bottom: '7px', zIndex: '1' }}
             >
-              <form className='uk-position-relative'>
-                <div className='uk-grid-small uk-margin-small uk-flex uk-flex-center uk-flex-bottom' data-uk-grid>
-                  {colourOptions && colourOptions.length > 0 ?
-                    <span
-                      id={'colour-attribute'}>
-                      <fieldset
-                        required={'required'}
-                        className='product-colour-attribute'
-                        onChange={colourChange}
-                      >
-                        <div className='fieldset-wrapper uk-flex uk-flex-bottom'>
-                          {colourOptions}
-                        </div>
-                      </fieldset>
-                    </span>
-                    : ''
-                  }
-                  {ageOptions && ageOptions.options.length > 0 ?
-                    <span>
-                      <select id={'age-attribute'}
-                        style={{
-                          padding: '2px', cursor: 'pointer',
-                          border: '1px solid #612e35', borderRadius: '10px'
-                        }}
-                        value={ageOptions.defaultValue}
-                        onChange={ageChange}>
-                        {ageOptions.options}
-                      </select>
-                    </span>
-                    : ''
-                  }
-                  {sexOptions && sexOptions.options.length > 0 ?
-                    <span>
-                      <select id={'sex-attribute'}
-                        style={{
-                          padding: '2px', cursor: 'pointer',
-                          border: '1px solid #612e35', borderRadius: '10px'
-                        }}
-                        value={sexOptions.defaultValue}
-                        onChange={sexChange}>
-                        {sexOptions.options}
-                      </select>
-                    </span>
-                    : ''
-                  }
-                  {sizeOptions && sizeOptions.options.length > 0 ?
-                    <span>
-                      <select id={'size-attribute'}
-                        style={{
-                          padding: '2px', cursor: 'pointer',
-                          border: '1px solid #612e35', borderRadius: '10px'
-                        }}
-                        value={sizeOptions.defaultValue}
-                        onChange={sizeChange}>
-                        {sizeOptions.options}
-                      </select>
-                    </span>
-                    : ''
-                  }
-                </div>
-              </form>
+              {(colourOptions && colourOptions.length > 0)
+                || (ageOptions && ageOptions.options.length > 0)
+                || (sexOptions && sexOptions.options.length > 0)
+                || (sizeOptions && sizeOptions.options.length > 0) ?
+                <form className='uk-position-relative'>
+                  <div className='uk-grid-small uk-margin-small uk-flex uk-flex-center uk-flex-bottom' data-uk-grid>
+                    {colourOptions && colourOptions.length > 0 ?
+                      <span
+                        id={'colour-attribute'}>
+                        <fieldset
+                          required={'required'}
+                          className='product-colour-attribute'
+                          onChange={colourChange}
+                        >
+                          <div className='fieldset-wrapper uk-flex uk-flex-bottom'>
+                            {colourOptions}
+                          </div>
+                        </fieldset>
+                      </span>
+                      : ''
+                    }
+                    {ageOptions && ageOptions.options.length > 0 ?
+                      <span>
+                        <select id={'age-attribute'}
+                          style={{
+                            padding: '2px', cursor: 'pointer',
+                            border: '1px solid #612e35', borderRadius: '10px'
+                          }}
+                          value={ageOptions.defaultValue}
+                          onChange={ageChange}>
+                          {ageOptions.options}
+                        </select>
+                      </span>
+                      : ''
+                    }
+                    {sexOptions && sexOptions.options.length > 0 ?
+                      <span>
+                        <select id={'sex-attribute'}
+                          style={{
+                            padding: '2px', cursor: 'pointer',
+                            border: '1px solid #612e35', borderRadius: '10px'
+                          }}
+                          value={sexOptions.defaultValue}
+                          onChange={sexChange}>
+                          {sexOptions.options}
+                        </select>
+                      </span>
+                      : ''
+                    }
+                    {sizeOptions && sizeOptions.options.length > 0 ?
+                      <span>
+                        <select id={'size-attribute'}
+                          style={{
+                            padding: '2px', cursor: 'pointer',
+                            border: '1px solid #612e35', borderRadius: '10px'
+                          }}
+                          value={sizeOptions.defaultValue}
+                          onChange={sizeChange}>
+                          {sizeOptions.options}
+                        </select>
+                      </span>
+                      : ''
+                    }
+                  </div>
+                </form>
+                : ''}
 
               <div className={'uk-flex uk-flex-center'} data-uk-grid>
-                <div className='uk-visible@s'
-                  style={{ marginLeft: '-78px' }}
-                ><input
-                    type='button'
-                    value={'˅'}
-                    onClick={filtersVisibility}
-                    className={'uk-button uk-margin-right'}
-                    style={{
-                      borderRadius: '25px', padding: '0 10px', width: '28px'
-                    }}
-                  /></div>
+                {(colourOptions && colourOptions.length > 0)
+                  || (ageOptions && ageOptions.options.length > 0)
+                  || (sexOptions && sexOptions.options.length > 0)
+                  || (sizeOptions && sizeOptions.options.length > 0) ?
+                  <div className='uk-visible@s'
+                    style={{ marginLeft: '-78px' }}
+                  ><input
+                      type='button'
+                      value={'˅'}
+                      onClick={filtersVisibility}
+                      className={'uk-button uk-margin-right'}
+                      style={{
+                        borderRadius: '25px', padding: '0 10px', width: '28px'
+                      }}
+                    /></div>
+                  : ''}
                 <AddToCart
                   variation={currentVariation}
                   type={productContent.data.type.slice(9)}

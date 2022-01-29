@@ -26,21 +26,13 @@ const OrderTeaser = ({ order }) => {
                 <Link to={url}>
                   {order.title}
                 </Link>
+                {order.multiItems ?
+                  <div className='uk-text-muted'>
+                    {' + ' + order.multiItems + ' more'}
+                  </div> : ''}
               </div>
               <div>
-                {
-                  order && order.qty && order.url > 1 ?
-                    <div className={'uk-card-secondary uk-text-center'}>
-                      <Link to={order.url}
-                        style={{ color: '#fff' }}>
-                        {' + ' + (order.qty - 1) + ' more'}
-                      </Link>
-                    </div>
-                    : ''
-                }
-              </div>
-              <div>
-                Paid: {order.price}
+                Paid: {order.price ? order.price : 'nil'}
               </div>
             </div>
           </div>

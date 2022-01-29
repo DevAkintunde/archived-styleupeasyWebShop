@@ -32,10 +32,7 @@ const CheckOutShippingDestination = ({
                             "type": orderType,
                             "id": order,
                             "attributes": {
-                                "email": values.email,
-                                "payment_instrument": {
-                                    "payment_gateway_id": values.paymentOption
-                                }
+                                "email": values.email
                             }
                         }
                     })
@@ -133,7 +130,8 @@ const CheckOutShippingDestination = ({
                     elementName={`shipping`}
                     extraValidation={values.address_line1}
                     previousStep={previousStep}
-                    submitText={'Ship Now'}
+                    previousText={'Change Email'}
+                    submitText={'Continue'}
                 />
             </form>
         </>

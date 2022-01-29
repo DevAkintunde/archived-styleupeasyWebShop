@@ -47,6 +47,17 @@ const CheckOutPaymentOption = ({
                         "id": order,
                         "attributes": {
                             "email": values.email,
+                            "shipping_information": {
+                                "address": {
+                                    "country_code": 'NG',
+                                    "administrative_area": values.state.value,
+                                    "locality": values.city.value,
+                                    "address_line1": values.address_line1,
+                                    "given_name": values.firstName,
+                                    'family_name': values.lastName
+                                },
+                                "field_customer_phone_number": values.contactNo
+                            },
                         }
                     }
                 })
@@ -66,7 +77,9 @@ const CheckOutPaymentOption = ({
             patchOrderContent();
         }
     }, [processPatch, patchUrl, cartToken, headerAuthorization,
-        values.email, order, orderType, refreshPaymentList, reservedPaymentList])
+        order, orderType, refreshPaymentList, reservedPaymentList,
+        values.contactNo, values.firstName, values.lastName, values.address_line1,
+        values.city, values.state, values.email])
 
     let payOptions = [];
     let paymentList = [];
@@ -137,21 +150,24 @@ const CheckOutPaymentOption = ({
         if (validator.isEmpty(values.paymentOption)) {
             setError(true);
         } else {
-            setError(false);
+            // setError(false);
             setReservedPaymentList(paymentList);
             nextStep();
         }
     };
     const backToPrevious = () => {
+        values.paymentOption = '';
         setReservedPaymentList();
         previousStep();
     }
+    //trigger async refresh if timed-out.
     const triggerVendorRefresh = () => {
         setRefreshPaymentList(Date.now());
     };
 
     return (
         <>
+            <h4 className='uk-text-muted uk-text-center'>Select a payment option</h4>
             <form
                 onSubmit={submitFormData}>
                 {payOptions && payOptions.length > 0 ?
@@ -182,7 +198,7 @@ const CheckOutPaymentOption = ({
                                 className='uk-button uk-button-default'
                                 onClick={backToPrevious}
                             >
-                                Change Email
+                                Change Address
                             </button></div>
                             : ''
                     }
@@ -192,7 +208,7 @@ const CheckOutPaymentOption = ({
                         disabled={payOptions && payOptions.length > 0 ?
                             false : true}
                     >
-                        Continue
+                        Ship now
                     </button></div>
                 </div>
             </form>

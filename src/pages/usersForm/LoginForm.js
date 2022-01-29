@@ -11,6 +11,8 @@ const siteUrl = config.url.SITE_URL;
 //const siteJsonUrl = config.url.SITE_JSON_URL;
 const LoginForm = ({ destination, isFunction }) => {
     const history = useHistory();
+    // console.log(history);
+    // console.log(history.goBack);
     // let getPageTitleById = document.getElementById('pageTitle');
 
     // useEffect(() => {
@@ -28,15 +30,11 @@ const LoginForm = ({ destination, isFunction }) => {
 
     const { setJwtTokenBearer } = useContext(JwtToken);
     const { loggedIn, setLoggedIn } = useContext(LoggedStatus);
-    //const history = useHistory()
-    //{ history.goBack() }
-
     const [emailInputError, setEmailInputError] = useState(false);
     const [passwordInputError, setPasswordInputError] = useState(false);
 
-    const [emailAddress, setEmailAddress] = useState()
-    const [password, setPassword] = useState()
-
+    const [emailAddress, setEmailAddress] = useState();
+    const [password, setPassword] = useState();
     const [loggingInError, setLoggingInError] = useState('');
     const [processLoggingIn, setProcessLoggingIn] = useState();
 
@@ -75,10 +73,14 @@ const LoginForm = ({ destination, isFunction }) => {
                         localStorage.setItem('signOnToken', resJson.access_token);
                         //localStorage.setItem('signOutToken', resJson.logout_token);
                         setLoggedIn(true);
-                        if (destination && isFunction === false) {
+                        if (destination && !isFunction) {
                             history.push(destination);
-                        } else if (destination && isFunction === true) {
+                        } else if (destination && isFunction) {
                             destination();
+                        } else if (history.location.search
+                            && history.location.search.includes('?destination')) {
+                            const thisDestination = history.location.search.split('?destination=')[1];
+                            history.push(thisDestination);
                         } else {
                             history.push('/signed-in');
                         }

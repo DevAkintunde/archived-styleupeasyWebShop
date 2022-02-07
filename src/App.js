@@ -1,13 +1,16 @@
 import { useState, useEffect, useMemo, createContext } from 'react';
+import { Suspense, lazy } from 'react';
 import { useLocation } from 'react-router-dom';
-import Header from './layout/Header';
 import PageWrapper from './layout/PageWrapper';
-import SideBar from './layout/SideBar';
 import { config } from './DrupalUrl';
-import CartModal from './pages/products/CartModal';
-import Footer from './layout/Footer';
 import { JsonLd } from 'react-schemaorg';
 import siteLogoImage from './images/logo.png';
+import Loading from './system/Loading';
+
+const Header = lazy(() => import('./layout/Header'));
+const SideBar = lazy(() => import('./layout/SideBar'));
+const CartModal = lazy(() => import('./pages/products/CartModal'));
+const Footer = lazy(() => import('./layout/Footer'));
 
 export const JwtToken = createContext({
   jwtTokenBearer: '',
@@ -268,20 +271,22 @@ const App = () => {
                   className='container uk-position-relative uk-margin-auto'
                   style={{ maxWidth: '1200px' }}
                 >
-                  <Header cartCount={cartCount} />
-                  <section className={'uk-margin-medium-top uk-margin-medium-bottom'}
-                    data-uk-grid>
-                    <SideBar />
-                    <PageWrapper />
-                  </section>
-                  <Footer />
+                  <Suspense fallback={<Loading />}>
+                    <Header cartCount={cartCount} />
+                    <section className={'uk-margin-medium-top uk-margin-medium-bottom'}
+                      data-uk-grid>
+                      <SideBar />
+                      <PageWrapper />
+                    </section>
+                    <Footer />
 
-                  <CartModal
-                    cartModalItems={cartModalItems}
-                    headerAuthorization={headerAuthorization}
-                    cartToken={cartToken}
-                    cartCount={cartCount}
-                  />
+                    <CartModal
+                      cartModalItems={cartModalItems}
+                      headerAuthorization={headerAuthorization}
+                      cartToken={cartToken}
+                      cartCount={cartCount}
+                    />
+                  </Suspense>
                 </div>
               </InCartCountTrigger.Provider>
             </LoggedUserName.Provider>

@@ -1,17 +1,18 @@
-import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
-import Loading from '../../system/Loading'
-import ParagraphDefault from '../../fields/paragraphs/ParagraphDefault'
-import { config } from '../../DrupalUrl'
-import { FaTags } from 'react-icons/fa'
-import PageTitle from '../../layout/PageTitle'
-import { JsonLd } from 'react-schemaorg'
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { withRouter, useHistory } from 'react-router-dom';
+import Loading from '../../system/Loading';
+import ParagraphDefault from '../../fields/paragraphs/ParagraphDefault';
+import { config } from '../../DrupalUrl';
+import { FaTags } from 'react-icons/fa';
+import PageTitle from '../../layout/PageTitle';
+import { JsonLd } from 'react-schemaorg';
 
 const siteUrl = config.url.SITE_URL;
 //const siteJsonUrl = config.url.SITE_JSON_URL;
 const siteJsonEntityUrl = config.url.SITE_ENTITY_ROUTER_URL;
 const Article = (props) => {
+  const history = useHistory();
   const [articleContent, setArticleContent] = useState();
 
   const alias = 'article/' + props.match.params.alias;
@@ -26,8 +27,11 @@ const Article = (props) => {
           'Content-type': 'application/vnd.api+json'
         }
       })
+      if (response.status === 404) {
+        history.push('/404');
+      }
       const outputData = await response.json();
-      if (isMounted) {
+      if (isMounted && response.status !== 404) {
         setArticleContent(outputData);
       }
     }
@@ -35,7 +39,7 @@ const Article = (props) => {
     return () => {
       isMounted = false;
     };
-  }, [alias])
+  }, [alias, history])
 
   let formatedPublishedDate = '';
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -55,7 +59,7 @@ const Article = (props) => {
       formatedPublishedDate = 'Posted ' + (createdDate.getDate() + '/' + (monthNames[createdDate.getMonth()]) + '/' + createdDate.getFullYear());
     }
   }
-  //console.log(articleContent);
+  // console.log(articleContent);
 
   return (
     <>

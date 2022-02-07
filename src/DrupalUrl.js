@@ -20,6 +20,9 @@ const prod = {
   payment: {
     paystack: 'pk_live_723787f248647b8a37edb402b947dcd5427a1a1c',
     coinbase: '',
+  },
+  analytics: {
+    google_measurement_id: 'G-EBG9M3FPWT',
   }
   /***
   oauth: {

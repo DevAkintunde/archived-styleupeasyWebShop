@@ -25,24 +25,28 @@ const ContactPage = () => {
   const [step, setStep] = useState();
 
   useEffect(() => {
-    setName(thisName);
-    if (Uid && jwtTokenBearer) {
-      const loggedInProfile = async () => {
-        const response = await fetch(siteJsonUrl + 'user/user/' + Uid, {
-          method: 'GET',
-          headers: {
-            'Content-type': 'application/json',
-            'Authorization': 'Bearer ' + jwtTokenBearer,
-          }
-        })
-        const outputData = await response.json();
-        //console.log(outputData);
-        if (outputData && outputData.data
-          && outputData.data.attributes.mail) {
-          setEmail(outputData.data.attributes.mail);
+    let isMounted = true;
+    const loggedInProfile = async () => {
+      const response = await fetch(siteJsonUrl + 'user/user/' + Uid, {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': 'Bearer ' + jwtTokenBearer,
         }
+      })
+      const outputData = await response.json();
+      //console.log(outputData);
+      if (outputData && outputData.data
+        && outputData.data.attributes.mail) {
+        setEmail(outputData.data.attributes.mail);
       }
+    }
+    if (Uid && jwtTokenBearer && isMounted) {
+      setName(thisName);
       loggedInProfile();
+    }
+    return () => {
+      isMounted = false;
     }
   }, [Uid, jwtTokenBearer, thisName])
 
@@ -97,8 +101,7 @@ const ContactPage = () => {
   const [messageInputError, setMessageInputError] = useState();
 
   const sendMessage = ((e) => {
-    e.preventDefault()
-    //console.log(formData.email)
+    e.preventDefault();
     if (validator.isEmpty(name)) {
       setNameInputError(true);
     } else if (!validator.isEmail(email)) {
@@ -159,7 +162,7 @@ const ContactPage = () => {
                 <input
                   type='button'
                   value='Send another message'
-                  className='uk-button'
+                  className='uk-button uk-button-secondary'
                   onClick={submitAgain}
                 />
               </div>
@@ -195,7 +198,8 @@ const ContactPage = () => {
             <div
               className='uk-card uk-card-body uk-card-default uk-width-large uk-width-1-1'
             >
-              <form id='contact-form'>
+              <form id='contact-form'
+                onSubmit={sendMessage}>
                 {loggedIn ?
                   <div className='form-item uk-margin-medium'>
                     <div>Name: <span className="uk-text-lead uk-margin-left">{thisName ? thisName : '...'}</span>
@@ -322,11 +326,10 @@ const ContactPage = () => {
 
                 <div className='uk-margin uk-text-center'>
                   <input
-                    type='button'
+                    type='submit'
                     value='Send'
-                    className='uk-button'
+                    className='uk-button uk-button-primary'
                     disabled={message ? false : true}
-                    onClick={sendMessage}
                   />
                 </div>
               </form>
@@ -336,5 +339,4 @@ const ContactPage = () => {
       )
   }
 }
-
 export default withRouter(ContactPage)

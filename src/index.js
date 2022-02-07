@@ -6,14 +6,13 @@ import 'uikit/dist/js/uikit.min.js';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import ScrollToTop from './system/ScrollToTop';
+import GoogleAnalytics from './system/GoogleAnalytics';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ScrollToTop>
-        <App />
-      </ScrollToTop>
+      <GoogleAnalytics />
+      <App />
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('styleupeasy-page-wrapper')

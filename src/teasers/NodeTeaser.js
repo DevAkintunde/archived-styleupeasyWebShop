@@ -15,7 +15,8 @@ const NodeTeaser = ({ entity }) => {
                   <img src={entity.image} alt={entity.data.attributes.title} />
                 </Link>
                 {entity.data && entity.data.attributes.title ?
-                  <h2 className='uk-text-lead uk-text-truncate uk-text-capitalize uk-position-bottom uk-padding-remove-vertical uk-overlay uk-overlay-primary uk-margin-remove uk-hidden@s'>
+                  <h2 className='uk-text-lead uk-text-break uk-text-capitalize uk-margin-remove uk-padding-small uk-padding-remove-vertical uk-hidden@s'
+                  >
                     <Link to={entity.data.attributes.path.alias}
                       className={'uk-text-bold'}
                     >
@@ -31,7 +32,7 @@ const NodeTeaser = ({ entity }) => {
           <div className='uk-padding-small'>
 
             {entity.data && entity.data.attributes.title ?
-              <h2 className='uk-text-lead uk-margin-small-top uk-text-truncate uk-text-capitalize'>
+              <h2 className='uk-text-lead uk-margin-small-top uk-text-break uk-text-capitalize'>
                 <Link to={entity.data.attributes.path.alias}>
                   {entity.data.attributes.title}
                 </Link>
@@ -80,6 +81,4 @@ const NodeTeaser = ({ entity }) => {
     </article>
   )
 }
-
-
 export default NodeTeaser;

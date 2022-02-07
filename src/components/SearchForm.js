@@ -12,7 +12,7 @@ const SearchForm = () => {
   }
 
   return (
-    <form>
+    <form id='searchNavBox'>
       <input
         className={'uk-input uk-form-width-small uk-width-auto uk-hidden@m'}
         type="text"

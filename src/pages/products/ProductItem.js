@@ -82,7 +82,7 @@ const ProductItem = (props) => {
       const outputData = await response.json();
       if (isMounted) {
         if (response.status === 404) {
-          setLoadingMessage("The page you're looking for cannot be found");
+          setLoadingMessage("The product you're looking for cannot be found. It may no longer be in stock.");
         } else {
           setProductUuid(outputData.data.id);
         }

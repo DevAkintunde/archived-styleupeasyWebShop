@@ -59,6 +59,12 @@ const HomeFeaturedBlock = () => {
                     //})
                 })
                 if (isMounted) {
+                    for (let i = variants.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * i + 1);
+                        const k = variants[i];
+                        variants[i] = variants[j];
+                        variants[j] = k;
+                    }
                     setVariations(variants);
                 }
             }
@@ -82,9 +88,9 @@ const HomeFeaturedBlock = () => {
     return (
         variations && variations.length > 0 ?
             <div className={'uk-padding uk-padding-remove-top uk-margin-large-top'}
-                style={{ backgroundColor: '#dda384' }}>
+                style={{ backgroundColor: '#ba6b57' }}>
                 <header className={'uk-text-lead uk-heading-bullet uk-margin-medium-top'}
-                    style={{ fontSize: '4.5vw', textAlign: 'center' }}
+                    style={{ fontSize: '5vw', textAlign: 'center', paddingTop: '10px', color: '#ffebcd' }}
                 >
                     Featured
                     <hr className={'uk-divider-small'} />
@@ -92,7 +98,7 @@ const HomeFeaturedBlock = () => {
                 <div className='uk-position-relative'>
                     <div className=''
                         data-uk-grid={'masonry: true'}>
-                        {variations.map((variation, index) => {
+                        {variations.map((variation) => {
                             return (
                                 <div className={'uk-card uk-width-1-1 uk-width-1-2@s uk-width-1-3@m uk-width-1-4@l'}
                                     key={variation.id}

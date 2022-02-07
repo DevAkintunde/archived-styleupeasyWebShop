@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import PageTitle from "../../layout/PageTitle";
 import { LoggedStatus } from '../../App';
 import LoginForm from "./LoginForm";
-import ResetLoginForm from './ResetLoginForm';
+import ResetLoginRequestForm from './ResetLoginRequestForm';
 import RegisterForm from './RegisterForm';
 
 const LoginPage = () => {
@@ -21,7 +21,7 @@ const LoginPage = () => {
                 </Route>
                 <Route path={'/sign-in/password-recovery'}>
                     <PageTitle title='Reset Password' />
-                    <ResetLoginForm />
+                    <ResetLoginRequestForm />
                 </Route>
             </Switch>
 

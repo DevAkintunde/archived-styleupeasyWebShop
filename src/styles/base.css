@@ -154,7 +154,7 @@
 }
 
 .uk-list-striped>:nth-of-type(odd), .uk-table-striped tbody tr:nth-of-type(odd), .uk-table-striped>tr:nth-of-type(odd) {
-	background: #dda38421;
+	background: #dda38421 !important;
 }
 
 .uk-table-hover tbody tr:hover, .uk-table-hover>tr:hover {

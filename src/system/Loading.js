@@ -63,7 +63,7 @@ const Loading = (props) => {
 						</div>
 					)
 				}
-			}, 35000);
+			}, 40000);
 		}
 
 		return () => {

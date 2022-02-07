@@ -111,7 +111,7 @@ const DashboardOrders = () => {
                 })
                 : <div className={'uk-width-1-1'}>
                   <Loading message={nonOrderMessage ?
-                    nonOrderMessage : "Oops! We can't seem to get you existing cart"} />
+                    nonOrderMessage : "Oops! We can't seem to get your recent orders at the moment"} />
                 </div>
               }
             </div>

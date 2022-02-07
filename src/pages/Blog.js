@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Loading from "../system/Loading";
 import NodeTeaser from "../teasers/NodeTeaser";
 import PageTitle from '../layout/PageTitle';
-import Pager from '../components/Pager';
+import Pager, { PagerFilter } from '../components/Pager';
 import { JsonLd } from 'react-schemaorg';
 
 const siteUrl = config.url.SITE_URL;
@@ -71,9 +71,7 @@ const Blog = () => {
   const filterReset = () => {
     setPagerData();
   }
-
   //console.log(articleContent)
-
   return (
     <>
       <JsonLd
@@ -91,7 +89,7 @@ const Blog = () => {
       <div className={'uk-margin'}>
         {articleContent && articleContent.length > 0 ?
           <>
-
+            <PagerFilter />
             {articleContent.map((entity, index) => {
               return (
                 <div key={entity.data.id} className={'uk-margin'}>

@@ -3,11 +3,10 @@ import { withRouter, useLocation } from 'react-router-dom';
 import Loading from '../../../system/Loading';
 import { config } from '../../../DrupalUrl';
 import PageTitle from '../../../layout/PageTitle';
-import Pager from '../../../components/Pager';
+import Pager, { PagerFilter } from '../../../components/Pager';
 import ProductTeaser from '../../../teasers/ProductTeaser';
 import { JsonLd } from 'react-schemaorg';
 import pluralize from 'pluralize/pluralize.js';
-import { PagerFilter } from '../../../components/Pager';
 
 const siteUrl = config.url.SITE_URL;
 const siteJsonUrl = config.url.SITE_JSON_URL;

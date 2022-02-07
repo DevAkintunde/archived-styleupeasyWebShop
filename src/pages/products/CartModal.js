@@ -706,7 +706,8 @@ const CartModal = ({
 				}
 
 				<button
-					className={'uk-text-lead uk-margin-small-bottom uk-position-z-index' + (history.location.pathname === '/cart' ? ' uk-hidden' : '')}
+					className={'uk-text-lead uk-margin-small-bottom uk-position-z-index' + (history.location.pathname === '/cart' ? ' uk-hidden'
+						: history.location.pathname.includes('/checkout/') ? ' uk-hidden' : '')}
 					style={{
 						color: '#310b0b!important',
 						background: openModal === true ? '#fff' : '#ffffffdb',

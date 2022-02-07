@@ -39,9 +39,13 @@ const SearchProductPage = () => {
     }
   }, [submitSearch, thisSearchPath, thisSearchPathRenderer]);
 
-  //console.log(location);
-  //console.log(searchPath);
-  //console.log(pagerData);
+  const clearNavSearchBoxText = document.querySelectorAll('#searchNavBox input');
+  if (clearNavSearchBoxText && clearNavSearchBoxText.length > 0) {
+    clearNavSearchBoxText.forEach((input) => {
+      input.value = '';
+    })
+  }
+
   const importPageContent = (pageContent) => {
     if (pageContent && pageContent.current) {
       setPagerData(pageContent.current);

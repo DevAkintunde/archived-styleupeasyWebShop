@@ -44,8 +44,7 @@ const ParagraphDefault = ({ type, uuid, authentication }) => {
       isMounted = false;
     };
   }, [paragraphUrl, token])
-
-  //console.log(paragraph);
+  // console.log(paragraph);
 
   if (paragraphType === 'images') {
     return (
@@ -55,13 +54,17 @@ const ParagraphDefault = ({ type, uuid, authentication }) => {
             return (
               <div key={apiRes.id}>
                 <img src={apiRes.attributes.image_style_uri.large} alt={paragraph.data.relationships.field_images.data[index].meta.alt} />
+                {paragraph.data.relationships.field_images && paragraph.data.relationships.field_images.data.length > 0 &&
+                  paragraph.data.relationships.field_images.data[index].meta.alt ?
+                  <div className='uk-text-small'>{paragraph.data.relationships.field_images.data[index].meta.alt}</div>
+                  : ''}
               </div>
             )
           }
           )}
         </div>
         :
-        <Loading />
+        <Loading message='Loading Images...' />
     )
   } else if (paragraphType === 'image') {
     return (
@@ -69,10 +72,14 @@ const ParagraphDefault = ({ type, uuid, authentication }) => {
         <div className='uk-flex uk-flex-center uk-margin'>
           <div>
             <img src={paragraph.included[0].attributes.image_style_uri.large} alt={paragraph.data.relationships.field_image.data.meta.alt} />
+            {paragraph.data.relationships.field_image &&
+              paragraph.data.relationships.field_image.data.meta.alt ?
+              <div className='uk-text-small'>{paragraph.data.relationships.field_image.data.meta.alt}</div>
+              : ''}
           </div>
         </div>
         :
-        <Loading />
+        <Loading message='Loading Image...' />
     )
   } else if (paragraphType === 'text') {
     return (
@@ -84,15 +91,13 @@ const ParagraphDefault = ({ type, uuid, authentication }) => {
           </div>
         </div>
         :
-        <Loading />
+        <Loading message='Loading content...' />
     )
   } else {
     return (
-      <Loading />
+      <Loading message='Loading...' />
     )
   }
 
 }
-
-
 export default ParagraphDefault;

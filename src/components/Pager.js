@@ -197,15 +197,6 @@ const Pager = ({
       } else {
         pageContents();
       }
-      // let getPageTitleById = document.querySelector('#pageTitle');
-      // if (getPageTitleById) {
-      //   console.log('getPageTitleById')
-      //   getPageTitleById.scrollIntoView({
-      //     behavior: 'smooth',
-      //     block: 'start'
-      //   });
-      // };
-      // console.log(getPageTitleById)
       setPageContentsRenderer(pageContent);
     }
   }, [pageContent, pageContents, pageContentsRenderer])
@@ -248,6 +239,13 @@ const Pager = ({
         if (filterForm) {
           UIkit.accordion(filterForm).toggle();
         }
+        const filterFormTop = document.querySelector('#page-filter-container-top');
+        if (filterFormTop) {
+          const checkFilterOpened = filterFormTop.querySelector('li.uk-open');
+          if (checkFilterOpened) {
+            UIkit.accordion(filterFormTop).toggle();
+          }
+        }
       } else if (!pageCounter) {
         const filterValueContainer = document.querySelector('#pager-filter');
         if (filterValueContainer && filterValueContainer.value
@@ -267,10 +265,16 @@ const Pager = ({
       });
     }
   }
-  const filtersVisibility = () => {
+  const filtersVisibility = (e) => {
     const filterForm = document.querySelector('#page-filter-container');
     if (filterForm) {
       UIkit.accordion(filterForm).toggle(0, true);
+      const checkFilterOpened = filterForm.querySelector('li.uk-open');
+      if (checkFilterOpened) {
+        e.target.value = '˅';
+      } else {
+        e.target.value = '^';
+      }
     }
   }
   //console.log(pageContent.current)
@@ -287,7 +291,7 @@ const Pager = ({
               id='page-filter-form'
               className={'uk-card-body uk-padding-small uk-accordion-content'}
               style={{
-                backgroundColor: '#9b5e4fbf', color: '#fff',
+                backgroundColor: '#3d322fbf', color: '#fff',
                 maxWidth: '480px', margin: 'auto'
               }}
             >
@@ -325,7 +329,7 @@ const Pager = ({
                   id='filterSubmit'
                   type='submit'
                   value='Filter'
-                  className={'uk-button uk-button-secondary uk-margin-top'}
+                  className={'uk-button uk-button-secondary'}
                 />
               </div>
             </form>
@@ -372,13 +376,14 @@ const Pager = ({
   )
 }
 export default Pager
+
 export const PagerFilter = () => {
   const [numberFilterError, setNumberFilterError] = useState(false);
   const submitFilters = (e) => {
     e.preventDefault();
     const pagerSubmit = document.querySelector('#filterSubmit');
     if (pagerSubmit) {
-      pagerSubmit.click()
+      pagerSubmit.click();
     }
     if (!numberFilterError) {
       const filterForm = document.querySelector('#page-filter-container-top');
@@ -387,7 +392,10 @@ export const PagerFilter = () => {
       }
       const filterFormMain = document.querySelector('#page-filter-container');
       if (filterFormMain) {
-        UIkit.accordion(filterFormMain).toggle();
+        const checkFilterOpened = filterFormMain.querySelector('li.uk-open');
+        if (checkFilterOpened) {
+          UIkit.accordion(filterFormMain).toggle();
+        }
       }
     }
   }
@@ -413,8 +421,11 @@ export const PagerFilter = () => {
         data-uk-accordion>
         <li style={{ listStyle: 'none' }}>
           <div
-            style={{ cursor: 'pointer' }}
-            className='uk-accordion-title uk-text-center uk-background-primary-light'>
+            style={{
+              cursor: 'pointer', backgroundColor: '#ba6b57',
+              color: '#f0f8ff'
+            }}
+            className='uk-accordion-title uk-text-center'>
             Filter
           </div>
           <form
@@ -422,7 +433,7 @@ export const PagerFilter = () => {
             id='page-filter-form-top'
             className={'uk-card-body uk-padding-small uk-accordion-content'}
             style={{
-              backgroundColor: '#9b5e4fbf', color: '#fff',
+              backgroundColor: '#3d322fbf', color: '#fff',
               maxWidth: '480px', margin: 'auto'
             }}
           >
@@ -460,7 +471,7 @@ export const PagerFilter = () => {
               <input
                 type='submit'
                 value='Filter'
-                className={'uk-button uk-button-secondary uk-margin-top'}
+                className={'uk-button uk-button-secondary'}
               />
             </div>
           </form>

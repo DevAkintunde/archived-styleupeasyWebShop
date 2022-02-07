@@ -80,14 +80,16 @@ const HomeNewArrivalBlock = () => {
                     <hr className={'uk-divider-small'} />
                 </header>
                 <div className='uk-position-relative' data-uk-slider='center: true; autoplay: true'>
-                    <ul className='uk-slider-items uk-child-width-1-2 uk-child-width-1-3@m uk-grid-small uk-grid-match'>
+                    <ul className='uk-slider-items uk-child-width-1-1 uk-child-width-1-3@m uk-grid-small uk-grid-match'>
                         {variations.map((variation) => {
                             return (
                                 <div key={variation.id}>
-                                    <div className='uk-card uk-card-primary-light uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-center'>
+                                    <div className='uk-card uk-card-default uk-padding-small uk-padding-remove-vertical uk-flex uk-flex-center'>
                                         <Link to={variation.parent_url}>
                                             {<img src={variation.images[0]} alt={variation.data.attributes.title}
-                                                style={{ minHeight: '150px', maxHeight: '250px', height: '100%', objectFit: 'cover' }}
+                                                style={{
+                                                    minHeight: '150px', maxHeight: '250px', height: '100%', objectFit: 'cover'
+                                                }}
                                             />}
                                         </Link>
                                         <div className='uk-position-bottom uk-text-center uk-overlay-default uk-margin-auto'>

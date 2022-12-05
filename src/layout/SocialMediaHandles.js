@@ -102,8 +102,8 @@ const SocialMediaHandles = ({
 
 SocialMediaHandles.defaultProps = {
   brandEmail: 'hello@styleupeasy.com',
-  brandPhoneNo: 2347062147858,
-  brandWhatsapp: 2347062147858,
+  brandPhoneNo: '',
+  brandWhatsapp: '',
   brandYoutube: 'https://www.youtube.com/channel/UCG2EsNLXlbooFoCVSLr53Lw',
   brandFacebook: 'shopstyleupeasy',
   brandInstagram: 'shopstyleupeasy',

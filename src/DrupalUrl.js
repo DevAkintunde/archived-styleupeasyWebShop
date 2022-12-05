@@ -16,7 +16,7 @@ const prod = {
     SITE_ENTITY_ROUTER_URL: siteWebUri + 'entity/router?format=jsonapi&path=/',
   },
   payment: {
-    paystack: 'pk_live_723787f248647b8a37edb402b947dcd5427a1a1c',
+    paystack: 'pk_live_',
     coinbase: '',
   }
   /***
@@ -33,7 +33,7 @@ const dev = {
     SITE_ENTITY_ROUTER_URL: siteLocalUri + 'entity/router?format=jsonapi&path=/',
   },
   payment: {
-    paystack: 'pk_test_a6ee68924b40af13e2e7973fc46eda04cb40049a',
+    paystack: 'pk_test_',
     coinbase: '',
   }
 }
